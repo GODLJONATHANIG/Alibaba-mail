@@ -1,0 +1,36 @@
+# Netlify Configuration for Alibaba Cloud DirectMail Automation Agent Frontend
+
+[build]
+  publish = "frontend"
+
+# Cache static assets
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Reverse Proxy /api/* to live HTTPS backend tunnel (solves Unexpected token '<' <!DOCTYPE)
+[[redirects]]
+  from = "/api/*"
+  to = "https://f4ece397dec203a9-106-195-71-196.serveousercontent.com/api/:splat"
+  status = 200
+  force = true
+
+# Map /static/* to root folder for asset compatibility
+[[redirects]]
+  from = "/static/*"
+  to = "/:splat"
+  status = 200
+
+# SPA Fallback
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

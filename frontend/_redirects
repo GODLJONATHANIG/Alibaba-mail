@@ -1,0 +1,3 @@
+/api/*      https://f4ece397dec203a9-106-195-71-196.serveousercontent.com/api/:splat  200!
+/static/*   /:splat                                                                     200
+/*          /index.html                                                                 200

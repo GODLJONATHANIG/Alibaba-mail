@@ -1,0 +1,2506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alibaba Cloud DirectMail Automation Agent</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#ff6a00',
+              hover: '#e05d00',
+              light: '#fff2e8',
+              dark: '#993e00'
+            },
+            darkbg: {
+              950: '#070b12',
+              900: '#0b0f19',
+              800: '#111827',
+              750: '#172033',
+              700: '#1f2937',
+              600: '#374151'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="bg-darkbg-900 text-slate-100 min-h-screen flex antialiased">
+
+  <!-- Sidebar Navigation -->
+  <aside class="w-64 bg-darkbg-800 border-r border-slate-800 flex flex-col justify-between shrink-0 select-none">
+    <div class="overflow-y-auto">
+      <!-- Brand Logo -->
+      <div class="p-4 border-b border-slate-800 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center shadow-lg shadow-orange-950/40 shrink-0">
+          <i data-lucide="mail-check" class="w-5 h-5 text-white"></i>
+        </div>
+        <div class="min-w-0">
+          <h1 class="font-bold text-sm tracking-wide text-white flex items-center gap-1.5 truncate">
+            ALIBABA MAIL <span class="text-[10px] px-1 py-0.5 rounded bg-brand/20 text-brand font-mono font-medium">AGENT</span>
+          </h1>
+          <p class="text-[11px] text-slate-400 truncate">DirectMail Multi-Region</p>
+        </div>
+      </div>
+
+      <!-- Navigation Links (11 Sections) -->
+      <nav class="p-2 space-y-1 text-xs font-medium">
+        
+        <!-- 1. Overview -->
+        <a href="#overview" onclick="navigateTo('overview')" id="nav-overview" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="layout-dashboard" class="w-4 h-4 text-orange-400"></i>
+            <span>Overview</span>
+          </div>
+        </a>
+
+        <!-- 2. Domains -->
+        <a href="#domains" onclick="navigateTo('domains')" id="nav-domains" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="globe" class="w-4 h-4 text-cyan-400"></i>
+            <span>Domains</span>
+          </div>
+          <span id="badge-domains-count" class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono">1</span>
+        </a>
+
+        <!-- 3. Senders -->
+        <a href="#senders" onclick="navigateTo('senders')" id="nav-senders" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="at-sign" class="w-4 h-4 text-emerald-400"></i>
+            <span>Senders</span>
+          </div>
+          <span id="badge-senders-count" class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono">5</span>
+        </a>
+
+        <!-- 4. Templates -->
+        <a href="#templates" onclick="navigateTo('templates')" id="nav-templates" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="file-code" class="w-4 h-4 text-purple-400"></i>
+            <span>Templates</span>
+          </div>
+          <span id="badge-templates-count" class="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono">5</span>
+        </a>
+
+        <!-- 5. Recipients -->
+        <a href="#recipients" onclick="navigateTo('recipients')" id="nav-recipients" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="users" class="w-4 h-4 text-pink-400"></i>
+            <span>Recipients Pool</span>
+          </div>
+          <span id="badge-recipients-count" class="text-[10px] px-1.5 py-0.5 rounded bg-pink-500/20 text-pink-300 font-mono">0</span>
+        </a>
+
+        <!-- 5.5. Email Tags -->
+        <a href="#tags" onclick="navigateTo('tags')" id="nav-tags" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="tag" class="w-4 h-4 text-amber-400"></i>
+            <span>Email Tags</span>
+          </div>
+          <span id="badge-tags-count" class="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono">0</span>
+        </a>
+
+        <div class="pt-2 pb-1 px-3">
+          <span class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">Execution</span>
+        </div>
+
+        <!-- 6. Email Tasks -->
+        <a href="#tasks" onclick="navigateTo('tasks')" id="nav-tasks" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="send" class="w-4 h-4 text-brand"></i>
+            <span>Email Tasks</span>
+          </div>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-brand/20 text-brand">Send & Bulk</span>
+        </a>
+
+        <!-- 7. Scheduling -->
+        <a href="#scheduling" onclick="navigateTo('scheduling')" id="nav-scheduling" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="calendar-clock" class="w-4 h-4 text-blue-400"></i>
+            <span>Scheduling</span>
+          </div>
+          <span id="badge-scheduled-count" class="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-mono font-semibold">0</span>
+        </a>
+
+        <div class="pt-2 pb-1 px-3">
+          <span class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">Observability</span>
+        </div>
+
+        <!-- 8. Delivery -->
+        <a href="#delivery" onclick="navigateTo('delivery')" id="nav-delivery" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="bar-chart-2" class="w-4 h-4 text-teal-400"></i>
+            <span>Delivery Metrics</span>
+          </div>
+        </a>
+
+        <!-- 9. Tracking -->
+        <a href="#tracking" onclick="navigateTo('tracking')" id="nav-tracking" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="activity" class="w-4 h-4 text-amber-400"></i>
+            <span>Tracking Feed</span>
+          </div>
+        </a>
+
+        <!-- 10. Analysis -->
+        <a href="#analysis" onclick="navigateTo('analysis')" id="nav-analysis" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-400"></i>
+            <span>Account Health</span>
+          </div>
+        </a>
+
+        <!-- 11. Audit Trail -->
+        <a href="#audit" onclick="navigateTo('audit')" id="nav-audit" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+            <span>Audit Trail</span>
+          </div>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono">Logs</span>
+        </a>
+
+        <div class="pt-2 pb-1 px-3">
+          <span class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">System</span>
+        </div>
+
+        <!-- 11. Settings -->
+        <a href="#settings" onclick="navigateTo('settings')" id="nav-settings" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="sliders" class="w-4 h-4 text-slate-400"></i>
+            <span>Settings</span>
+          </div>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Status Footer -->
+    <div class="p-3 border-t border-slate-800 space-y-2 text-[11px] text-slate-400 bg-slate-900/50">
+      <div class="flex items-center justify-between">
+        <span class="flex items-center gap-1.5">
+          <span id="scheduler-pulse" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Scheduler</span>
+        </span>
+        <span id="scheduler-status-text" class="text-emerald-400 font-medium">Active</span>
+      </div>
+      <div class="flex items-center justify-between">
+        <span>Mode</span>
+        <span id="global-test-badge" class="px-2 py-0.5 text-[10px] font-semibold rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Live DirectMail</span>
+      </div>
+      <div class="text-[10px] text-slate-500 flex items-center justify-between">
+        <span>TZ: <b id="display-default-tz" class="text-slate-400 font-normal">Asia/Kolkata</b></span>
+        <span id="display-quota-quick" class="text-brand font-mono">10,000/d</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 flex flex-col h-screen overflow-y-auto">
+
+    <!-- Top Navigation Header with Smart Agent Console -->
+    <header class="h-16 border-b border-slate-800 bg-darkbg-800/80 backdrop-blur px-6 flex items-center justify-between sticky top-0 z-30 gap-4">
+      
+      <!-- Smart Agent Search Console Bar -->
+      <div class="flex-1 max-w-xl">
+        <form onsubmit="handleSmartAgentSubmit(event)" class="relative flex items-center">
+          <div class="absolute left-3 flex items-center pointer-events-none text-brand">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+          </div>
+          <input type="text" id="smart-agent-input" placeholder="Ask Agent: e.g. 'What is my daily quota?', 'Show today\'s delivery report', 'List domains'..." class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl pl-9 pr-24 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-brand transition shadow-inner">
+          <button type="submit" id="btn-smart-agent-ask" class="absolute right-1 px-3 py-1 bg-brand hover:bg-brand-hover text-white text-[11px] font-medium rounded-lg transition flex items-center gap-1 shadow">
+            <span>Ask</span>
+            <i data-lucide="arrow-right" class="w-3 h-3"></i>
+          </button>
+        </form>
+      </div>
+
+      <!-- Right Controls: Active Region Pill & Refresh -->
+      <div class="flex items-center gap-3 shrink-0">
+        <!-- Backend API Connection Indicator -->
+        <button type="button" id="btn-backend-status" onclick="openBackendModal()" class="px-2.5 py-1 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-medium text-slate-300 hover:text-white flex items-center gap-2 transition shadow-sm" title="Configure live Backend API connection">
+          <span id="backend-status-dot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span id="backend-status-text" class="hidden md:inline">API: Connected</span>
+          <i data-lucide="settings" class="w-3 h-3 text-slate-400"></i>
+        </button>
+
+        <!-- Global Region Selector -->
+        <div class="flex items-center gap-1 bg-slate-900 border border-slate-800 rounded-xl p-1 text-xs">
+          <button type="button" onclick="setGlobalRegion('singapore')" id="global-reg-singapore" class="px-2.5 py-1 rounded-lg font-medium text-white bg-brand shadow transition flex items-center gap-1">
+            <span>🇸🇬 Singapore</span>
+          </button>
+          <button type="button" onclick="setGlobalRegion('germany')" id="global-reg-germany" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white transition flex items-center gap-1">
+            <span>🇩🇪 Germany</span>
+          </button>
+          <button type="button" onclick="setGlobalRegion('united_states')" id="global-reg-united_states" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white transition flex items-center gap-1">
+            <span>🇺🇸 US</span>
+          </button>
+        </div>
+
+        <button onclick="refreshData()" class="p-2 text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl transition" title="Refresh live data">
+          <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Content Views Container -->
+    <div class="p-6 max-w-7xl w-full mx-auto space-y-6 flex-1">
+
+      <!-- ================= 1. VIEW: OVERVIEW ================= -->
+      <section id="view-overview" class="view-section space-y-6">
+        <!-- Banner -->
+        <div class="bg-gradient-to-r from-orange-950/40 via-darkbg-800 to-slate-900 border border-brand/20 rounded-2xl p-6 shadow-xl flex flex-wrap items-center justify-between gap-4">
+          <div class="space-y-1">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2.5">
+              <span>DirectMail Control Center</span>
+              <span id="overview-region-pill" class="text-xs px-2.5 py-0.5 rounded-full bg-brand/20 text-brand border border-brand/30 font-medium">Singapore (ap-southeast-1)</span>
+            </h2>
+            <p class="text-xs text-slate-400">Live operational metrics, verified domain credentials, and transmission health</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="navigateTo('tasks')" class="px-4 py-2 bg-brand hover:bg-brand-hover text-white text-xs font-semibold rounded-xl transition flex items-center gap-2 shadow-lg shadow-orange-900/30">
+              <i data-lucide="send" class="w-3.5 h-3.5"></i>
+              <span>New Email Task</span>
+            </button>
+            <button onclick="loadOverviewData()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded-xl border border-slate-700 transition flex items-center gap-1.5">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              <span>Sync Metrics</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Live Metric Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Daily Quota -->
+          <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-2">
+            <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
+              <span>Daily Sending Quota</span>
+              <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span id="metric-daily-quota" class="text-2xl font-bold text-white font-mono">10,000</span>
+              <span class="text-xs text-slate-400">emails / day</span>
+            </div>
+            <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
+              <div id="metric-daily-bar" class="bg-amber-500 h-full rounded-full" style="width: 2%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-slate-500">
+              <span>Quota Level: <b id="metric-quota-level" class="text-slate-300 font-mono">5 / 10</b></span>
+              <span id="metric-daily-sent" class="text-slate-400 font-mono">Live Sync</span>
+            </div>
+          </div>
+
+          <!-- Monthly Quota -->
+          <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-2">
+            <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
+              <span>Monthly Volume Limit</span>
+              <i data-lucide="calendar" class="w-4 h-4 text-blue-400"></i>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span id="metric-month-quota" class="text-2xl font-bold text-white font-mono">300,000</span>
+              <span class="text-xs text-slate-400">emails / mo</span>
+            </div>
+            <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
+              <div id="metric-month-bar" class="bg-blue-500 h-full rounded-full" style="width: 1%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-slate-500">
+              <span>Channel: <b id="metric-channel-type" class="text-slate-300">normal</b></span>
+              <span class="text-slate-400 font-mono">DirectMail</span>
+            </div>
+          </div>
+
+          <!-- Verified Domains -->
+          <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-2 cursor-pointer hover:border-slate-700 transition" onclick="navigateTo('domains')">
+            <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
+              <span>Verified Domains</span>
+              <i data-lucide="globe" class="w-4 h-4 text-cyan-400"></i>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span id="metric-domains-count" class="text-2xl font-bold text-cyan-400 font-mono">1</span>
+              <span class="text-xs text-slate-400">domain configured</span>
+            </div>
+            <p id="metric-domain-preview" class="text-[11px] text-slate-300 font-mono truncate">notificationquickbooks.com</p>
+            <div class="text-[10px] text-emerald-400 flex items-center gap-1 pt-1">
+              <i data-lucide="check-circle" class="w-3 h-3"></i> CNAME & SPF Authenticated
+            </div>
+          </div>
+
+          <!-- Verified Senders -->
+          <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-2 cursor-pointer hover:border-slate-700 transition" onclick="navigateTo('senders')">
+            <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
+              <span>Sender Identities</span>
+              <i data-lucide="at-sign" class="w-4 h-4 text-emerald-400"></i>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span id="metric-senders-count" class="text-2xl font-bold text-emerald-400 font-mono">5</span>
+              <span class="text-xs text-slate-400">identities active</span>
+            </div>
+            <p class="text-[11px] text-slate-400 truncate">billing@, help@, noreply@, care@...</p>
+            <div class="text-[10px] text-slate-500 pt-1 flex justify-between">
+              <span>Type: <b class="text-slate-300">batch / trigger</b></span>
+              <span class="text-emerald-400">Normal</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delivery Performance Summary Strip -->
+        <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+              <i data-lucide="bar-chart" class="w-3.5 h-3.5 text-teal-400"></i>
+              7-Day Delivery Performance (Alibaba Cloud Live Data)
+            </h4>
+            <a href="#delivery" onclick="navigateTo('delivery')" class="text-xs text-brand hover:underline">View Delivery Analytics →</a>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
+            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">
+              <span class="text-[10px] text-slate-400 uppercase">Total Sent</span>
+              <p id="overview-stat-sent" class="text-lg font-bold text-white font-mono mt-0.5">0</p>
+            </div>
+            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">
+              <span class="text-[10px] text-slate-400 uppercase">Success Rate</span>
+              <p id="overview-stat-rate" class="text-lg font-bold text-emerald-400 font-mono mt-0.5">100%</p>
+            </div>
+            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">
+              <span class="text-[10px] text-slate-400 uppercase">Failed</span>
+              <p id="overview-stat-failed" class="text-lg font-bold text-rose-400 font-mono mt-0.5">0</p>
+            </div>
+            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">
+              <span class="text-[10px] text-slate-400 uppercase">Bounced</span>
+              <p id="overview-stat-bounced" class="text-lg font-bold text-amber-400 font-mono mt-0.5">0</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alibaba Cloud DirectMail Tasks & Local History Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Alibaba Remote Tasks -->
+          <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                <i data-lucide="layers" class="w-3.5 h-3.5 text-brand"></i>
+                DirectMail Batch Tasks (Alibaba Cloud)
+              </h4>
+              <button onclick="loadOverviewTasks()" class="text-[11px] text-slate-400 hover:text-white">Refresh</button>
+            </div>
+            <div id="overview-dm-tasks-list" class="space-y-2 text-xs">
+              <div class="text-center py-6 text-slate-500 italic">Loading batch tasks from Alibaba DirectMail...</div>
+            </div>
+          </div>
+
+          <!-- Recent Application Activity -->
+          <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i>
+                Recent Dispatches (Local Audit)
+              </h4>
+              <a href="#tasks" onclick="setTasksTab('history')" class="text-[11px] text-brand hover:underline">View All →</a>
+            </div>
+            <div id="overview-recent-activity" class="space-y-2 text-xs">
+              <div class="text-center py-6 text-slate-500 italic">No recent dispatches.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 2. VIEW: DOMAINS ================= -->
+      <section id="view-domains" class="view-section space-y-6 hidden">
+        <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+            <div>
+              <h3 class="font-bold text-base text-white flex items-center gap-2">
+                <i data-lucide="globe" class="w-4 h-4 text-cyan-400"></i>
+                Configured Email Domains
+              </h3>
+              <p class="text-xs text-slate-400">Domains authenticated in Alibaba Cloud DirectMail for transactional & batch dispatching</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="openAddDomainModal()" class="px-3.5 py-2 bg-brand hover:bg-brand-hover text-white text-xs font-semibold rounded-xl transition flex items-center gap-1.5 shadow">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Add Domain</span>
+              </button>
+              <button onclick="loadDomainsTable()" class="p-2 bg-slate-900 border border-slate-700 text-slate-300 hover:text-white rounded-xl text-xs">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Domains Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="text-slate-400 border-b border-slate-800 uppercase tracking-wider text-[11px] bg-slate-900/50">
+                <tr>
+                  <th class="py-3 px-4">Domain Name</th>
+                  <th class="py-3 px-4">Domain ID</th>
+                  <th class="py-3 px-4">Status</th>
+                  <th class="py-3 px-4">CNAME Auth</th>
+                  <th class="py-3 px-4">SPF Auth</th>
+                  <th class="py-3 px-4">MX Auth</th>
+                  <th class="py-3 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="domains-table-body" class="divide-y divide-slate-800">
+                <tr><td colspan="7" class="text-center py-6 text-slate-500 italic">Loading domains from Alibaba Cloud...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 3. VIEW: SENDERS ================= -->
+      <section id="view-senders" class="view-section space-y-6 hidden">
+        <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+            <div>
+              <h3 class="font-bold text-base text-white flex items-center gap-2">
+                <i data-lucide="at-sign" class="w-4 h-4 text-emerald-400"></i>
+                Verified Sender Addresses
+              </h3>
+              <p class="text-xs text-slate-400">DirectMail console verified identities authorized to send emails</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="openAddSenderModalFromSenders()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-xl transition flex items-center gap-1.5 shadow">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Add Sender</span>
+              </button>
+              <button onclick="loadSendersTable()" class="p-2 bg-slate-900 border border-slate-700 text-slate-300 hover:text-white rounded-xl text-xs">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Senders Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="text-slate-400 border-b border-slate-800 uppercase tracking-wider text-[11px] bg-slate-900/50">
+                <tr>
+                  <th class="py-3 px-4">Sender Email</th>
+                  <th class="py-3 px-4">Mail ID</th>
+                  <th class="py-3 px-4">Send Type</th>
+                  <th class="py-3 px-4">Reply Address</th>
+                  <th class="py-3 px-4">Daily Req</th>
+                  <th class="py-3 px-4">Status</th>
+                  <th class="py-3 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="senders-table-body" class="divide-y divide-slate-800">
+                <tr><td colspan="7" class="text-center py-6 text-slate-500 italic">Loading senders from Alibaba Cloud...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 4. VIEW: TEMPLATES ================= -->
+      <section id="view-templates" class="view-section space-y-6 hidden">
+        <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+          <!-- Top Switcher: Local Templates vs Alibaba Remote -->
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+            <div>
+              <h3 class="font-bold text-base text-white flex items-center gap-2">
+                <i data-lucide="file-code" class="w-4 h-4 text-purple-400"></i>
+                Template Management & Review Center
+              </h3>
+              <p class="text-xs text-slate-400">Manage HTML & Plain-Text templates with formal review states and direct Alibaba DirectMail synchronization</p>
+            </div>
+            <!-- Tab Switcher -->
+            <div class="flex items-center gap-2">
+              <div class="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs">
+                <button type="button" onclick="setTemplateSubTab('local')" id="btn-tpl-tab-local" class="px-3.5 py-1.5 rounded-lg font-semibold bg-purple-600 text-white shadow transition flex items-center gap-1.5">
+                  <i data-lucide="code-2" class="w-3.5 h-3.5"></i>
+                  <span>App Templates (HTML/Text)</span>
+                </button>
+                <button type="button" onclick="setTemplateSubTab('remote')" id="btn-tpl-tab-remote" class="px-3.5 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition flex items-center gap-1.5">
+                  <i data-lucide="cloud" class="w-3.5 h-3.5"></i>
+                  <span>DirectMail Remote</span>
+                </button>
+              </div>
+              <button onclick="openCreateTemplateModal()" class="px-3.5 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-xl transition flex items-center gap-1.5 shadow">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Create Template</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- SUB-TAB 1: LOCAL TEMPLATES -->
+          <div id="tpl-content-local" class="space-y-4">
+            <!-- Filter & Search Toolbar -->
+            <div class="flex flex-wrap items-center justify-between gap-3 text-xs bg-slate-900/50 p-3 rounded-xl border border-slate-800">
+              <div class="flex flex-wrap items-center gap-2">
+                <select id="local-tpl-format-filter" onchange="loadLocalTemplatesTable()" class="bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1.5">
+                  <option value="">All Formats (HTML & Text)</option>
+                  <option value="html">HTML Formatted</option>
+                  <option value="text">Plain Text</option>
+                </select>
+                <select id="local-tpl-status-filter" onchange="loadLocalTemplatesTable()" class="bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1.5">
+                  <option value="">All Review Statuses</option>
+                  <option value="draft">Draft</option>
+                  <option value="pending_review">Pending Review</option>
+                  <option value="approved">Approved</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+                <select id="local-tpl-sync-filter" onchange="loadLocalTemplatesTable()" class="bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1.5">
+                  <option value="">All Sync States</option>
+                  <option value="sync_pending">Sync Pending</option>
+                  <option value="synchronized">Synchronized</option>
+                  <option value="sync_failed">Sync Failed</option>
+                </select>
+              </div>
+              <div class="flex items-center gap-2">
+                <input type="text" id="local-tpl-search" onkeyup="debounceSearchLocalTemplates()" placeholder="Search templates..." class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 w-52 focus:outline-none focus:border-purple-500">
+                <button onclick="loadLocalTemplatesTable()" class="p-2 bg-slate-900 border border-slate-700 text-slate-300 hover:text-white rounded-xl">
+                  <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Local Templates Table -->
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="text-slate-400 border-b border-slate-800 uppercase tracking-wider text-[11px] bg-slate-900/50">
+                  <tr>
+                    <th class="py-3 px-4">Template & Subject</th>
+                    <th class="py-3 px-4">Format</th>
+                    <th class="py-3 px-4">Type</th>
+                    <th class="py-3 px-4">Review State</th>
+                    <th class="py-3 px-4">DirectMail Sync</th>
+                    <th class="py-3 px-4">Updated</th>
+                    <th class="py-3 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="local-templates-table-body" class="divide-y divide-slate-800">
+                  <tr><td colspan="7" class="text-center py-6 text-slate-500 italic">Loading application templates...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- SUB-TAB 2: DIRECTMAIL REMOTE TEMPLATES -->
+          <div id="tpl-content-remote" class="space-y-4 hidden">
+            <div class="flex items-center justify-between text-xs text-slate-400 bg-slate-900/40 p-2.5 rounded-xl border border-slate-800">
+              <span class="flex items-center gap-1.5">
+                <i data-lucide="cloud" class="w-3.5 h-3.5 text-purple-400"></i>
+                Authoritative Alibaba Cloud infrastructure templates in <b class="text-white capitalize" id="remote-tpl-region-label">Singapore</b>
+              </span>
+              <button onclick="loadTemplatesTable()" class="text-xs text-purple-400 hover:underline flex items-center gap-1">
+                <i data-lucide="refresh-cw" class="w-3 h-3"></i> Refresh Remote
+              </button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="text-slate-400 border-b border-slate-800 uppercase tracking-wider text-[11px] bg-slate-900/50">
+                  <tr>
+                    <th class="py-3 px-4">Remote Template Name</th>
+                    <th class="py-3 px-4">DirectMail ID</th>
+                    <th class="py-3 px-4">Type</th>
+                    <th class="py-3 px-4">DirectMail Status</th>
+                    <th class="py-3 px-4">Created Date</th>
+                    <th class="py-3 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="templates-table-body" class="divide-y divide-slate-800">
+                  <tr><td colspan="6" class="text-center py-6 text-slate-500 italic">Loading templates from Alibaba Cloud...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 5. VIEW: RECIPIENTS POOL ================= -->
+      <section id="view-recipients" class="view-section space-y-6 hidden">
+        <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="font-bold text-base text-white flex items-center gap-2">
+                  <i data-lucide="users" class="w-4 h-4 text-pink-400"></i>
+                  Application Recipient Pool
+                </h3>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Local Database</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">Manage target recipients locally with tags and quick selection for bulk campaigns</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="openAddRecipientsModal()" class="px-3.5 py-2 bg-pink-600 hover:bg-pink-500 text-white text-xs font-semibold rounded-xl transition flex items-center gap-1.5 shadow">
+                <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+                <span>Add Recipient(s)</span>
+              </button>
+              <button onclick="confirmDeleteSelectedRecipients()" id="btn-delete-selected-recipients" class="px-3.5 py-2 bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white text-xs font-medium rounded-xl border border-rose-500/30 transition flex items-center gap-1.5 disabled:opacity-40" disabled>
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                <span id="btn-delete-recipients-text">Delete Selected (0)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Selection & Filter Bar -->
+          <div class="flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div class="flex items-center gap-3">
+              <button type="button" onclick="selectAllRecipients(true)" class="px-2.5 py-1 bg-slate-900 border border-slate-700 hover:bg-slate-800 rounded-lg text-slate-300">Select All</button>
+              <button type="button" onclick="selectAllRecipients(false)" class="px-2.5 py-1 bg-slate-900 border border-slate-700 hover:bg-slate-800 rounded-lg text-slate-300">Deselect All</button>
+              <span class="text-slate-400 text-[11px]"><span id="recipients-selected-count" class="font-bold text-pink-400">0</span> of <span id="recipients-total-count">0</span> selected</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <input type="text" id="recipients-search-input" onkeyup="filterRecipientsTable()" placeholder="Search email, name, tag..." class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 w-56 focus:outline-none focus:border-brand">
+              <button onclick="useSelectedInCampaign()" class="px-3 py-1.5 bg-brand/20 hover:bg-brand text-brand hover:text-white border border-brand/40 rounded-lg text-xs font-medium transition">
+                Use in Bulk Campaign →
+              </button>
+            </div>
+          </div>
+
+          <!-- Recipients Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="text-slate-400 border-b border-slate-800 uppercase tracking-wider text-[11px] bg-slate-900/50">
+                <tr>
+                  <th class="py-3 px-4 w-10">
+                    <input type="checkbox" id="recipients-check-all" onchange="toggleSelectAllRecipients(this.checked)" class="accent-brand rounded cursor-pointer">
+                  </th>
+                  <th class="py-3 px-4">Email Address</th>
+                  <th class="py-3 px-4">Recipient Name</th>
+                  <th class="py-3 px-4">Tags / Labels</th>
+                  <th class="py-3 px-4">Added Date</th>
+                  <th class="py-3 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recipients-table-body" class="divide-y divide-slate-800">
+                <tr><td colspan="6" class="text-center py-6 text-slate-500 italic">No recipients in application pool. Click "Add Recipient(s)" to build your list.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 5.5. VIEW: EMAIL TAGS ================= -->
+      <section id="view-tags" class="view-section space-y-6 hidden">
+        <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+            <div>
+              <h3 class="font-bold text-base text-white flex items-center gap-2">
+                <i data-lucide="tag" class="w-4 h-4 text-amber-400"></i>
+                Email Tags Management
+              </h3>
+              <p class="text-xs text-slate-400">Create and synchronize classification tags for DirectMail campaigns, metrics filtering, and task association</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="openCreateTagModal()" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold rounded-xl transition flex items-center gap-1.5 shadow">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Create Email Tag</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter & Search Toolbar -->
+          <div class="flex flex-wrap items-center justify-between gap-3 text-xs bg-slate-900/50 p-3 rounded-xl border border-slate-800">
+            <div class="flex items-center gap-2">
+              <input type="text" id="tag-search-input" onkeyup="debounceSearchTags()" placeholder="Search tags..." class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 w-56 focus:outline-none focus:border-amber-500">
+            </div>
+            <button onclick="loadEmailTagsTable()" class="p-2 bg-slate-900 border border-slate-700 text-slate-300 hover:text-white rounded-xl">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- Tags Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="text-slate-400 border-b border-slate-800 uppercase tracking-wider text-[11px] bg-slate-900/50">
+                <tr>
+                  <th class="py-3 px-4">Tag Name</th>
+                  <th class="py-3 px-4">Description</th>
+                  <th class="py-3 px-4">Region</th>
+                  <th class="py-3 px-4">DirectMail Tag ID</th>
+                  <th class="py-3 px-4">Created Date</th>
+                  <th class="py-3 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="email-tags-table-body" class="divide-y divide-slate-800">
+                <tr><td colspan="6" class="text-center py-6 text-slate-500 italic">Loading email tags...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 6. VIEW: EMAIL TASKS ================= -->
+      <section id="view-tasks" class="view-section space-y-6 hidden">
+        <!-- Sub-Tabs: Quick Send | Bulk Campaign | Alibaba Tasks -->
+        <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
+          <button type="button" onclick="setTasksTab('send')" id="tasks-tab-send" class="px-4 py-2 rounded-xl text-xs font-semibold bg-brand text-white shadow transition flex items-center gap-2">
+            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+            <span>Quick Send (Single / Test)</span>
+          </button>
+          <button type="button" onclick="setTasksTab('bulk')" id="tasks-tab-bulk" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition flex items-center gap-2">
+            <i data-lucide="users" class="w-3.5 h-3.5"></i>
+            <span>Bulk Campaign</span>
+          </button>
+          <button type="button" onclick="setTasksTab('dmtasks')" id="tasks-tab-dmtasks" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition flex items-center gap-2">
+            <i data-lucide="list-checks" class="w-3.5 h-3.5"></i>
+            <span>Alibaba Batch Tasks</span>
+          </button>
+          <button type="button" onclick="setTasksTab('history')" id="tasks-tab-history" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition flex items-center gap-2">
+            <i data-lucide="history" class="w-3.5 h-3.5"></i>
+            <span>Audit History</span>
+          </button>
+        </div>
+
+        <!-- TAB CONTENT 1: QUICK SEND -->
+        <div id="tasks-content-send" class="space-y-6">
+          <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+              <div>
+                <h3 class="font-semibold text-base text-white flex items-center gap-2">
+                  <i data-lucide="send" class="w-4 h-4 text-brand"></i>
+                  Compose Email
+                </h3>
+                <p class="text-xs text-slate-400">Single transactional email with Alibaba Cloud DirectMail</p>
+              </div>
+              <!-- Region Selector Radio Pills -->
+              <div class="flex items-center gap-1.5 bg-slate-900 p-1 rounded-xl border border-slate-800" id="send-region-selector">
+                <button type="button" onclick="selectSendRegion('singapore')" data-region="singapore" class="region-pill px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 bg-brand text-white shadow">
+                  <span>🇸🇬 Singapore</span>
+                </button>
+                <button type="button" onclick="selectSendRegion('germany')" data-region="germany" class="region-pill px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition flex items-center gap-1.5">
+                  <span>🇩🇪 Germany</span>
+                </button>
+                <button type="button" onclick="selectSendRegion('united_states')" data-region="united_states" class="region-pill px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition flex items-center gap-1.5">
+                  <span>🇺🇸 US</span>
+                </button>
+              </div>
+            </div>
+
+            <form id="single-send-form" onsubmit="handleSendSubmit(event)" class="space-y-5">
+              <!-- Live DirectMail Domain Banner -->
+              <div id="live-infra-banner" class="bg-gradient-to-r from-orange-950/30 to-amber-950/20 border border-brand/30 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span class="text-slate-300 font-medium">DirectMail Domain:</span>
+                  <span id="live-domain-badge" class="font-mono text-cyan-300 font-semibold bg-slate-900/80 px-2 py-0.5 rounded border border-slate-700">Checking...</span>
+                  <span id="live-domain-status" class="text-[11px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Active</span>
+                </div>
+                <button type="button" onclick="syncLiveFromAlibaba()" class="text-[11px] px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-brand border border-brand/30 font-medium flex items-center gap-1.5 transition shadow">
+                  <i data-lucide="refresh-cw" class="w-3 h-3"></i> Sync DirectMail Data
+                </button>
+              </div>
+
+              <!-- Region and Sender Line -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <div class="flex items-center justify-between mb-1.5">
+                    <label class="text-xs font-medium text-slate-300">
+                      Verified Sender Address <span class="text-rose-400">*</span>
+                    </label>
+                    <span id="send-endpoint-hint" class="text-[11px] text-slate-500 font-normal">(Endpoint: dm.ap-southeast-1.aliyuncs.com)</span>
+                  </div>
+                  <div class="relative">
+                    <select id="send-sender-select" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brand transition appearance-none pr-9">
+                      <!-- Populated dynamically -->
+                    </select>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3 top-3.5 pointer-events-none"></i>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-medium text-slate-300 mb-1.5">
+                    Recipient Email Address <span class="text-rose-400">*</span>
+                  </label>
+                  <input type="email" id="send-recipient" required placeholder="recipient@example.com" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand transition">
+                </div>
+              </div>
+
+              <!-- Subject & Template Selector & Tag Selector -->
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="md:col-span-2">
+                  <label class="block text-xs font-medium text-slate-300 mb-1.5">
+                    Subject <span class="text-rose-400">*</span>
+                  </label>
+                  <input type="text" id="send-subject" required maxlength="256" placeholder="Important Notification" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand transition">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-slate-300 mb-1.5">
+                    Template (Auto-Subject)
+                  </label>
+                  <select id="send-template-select" onchange="handleSelectSendTemplate(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand">
+                    <option value="">-- Custom Compose --</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-slate-300 mb-1.5">
+                    Email Tag
+                  </label>
+                  <select id="send-tag-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                    <option value="">-- None --</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Content Tabs: Plain Text vs HTML vs Preview -->
+              <div class="space-y-2">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                  <label class="text-xs font-medium text-slate-300">Email Body Content</label>
+                  <div class="flex items-center gap-1 text-xs">
+                    <button type="button" onclick="setBodyTab('html')" id="tab-btn-html" class="px-2.5 py-1 rounded-md font-medium text-brand bg-brand/10 border border-brand/20">HTML Body</button>
+                    <button type="button" onclick="setBodyTab('text')" id="tab-btn-text" class="px-2.5 py-1 rounded-md font-medium text-slate-400 hover:text-white">Plain Text</button>
+                    <button type="button" onclick="setBodyTab('preview')" id="tab-btn-preview" class="px-2.5 py-1 rounded-md font-medium text-slate-400 hover:text-white flex items-center gap-1">
+                      <i data-lucide="eye" class="w-3.5 h-3.5"></i> Preview
+                    </button>
+                  </div>
+                </div>
+
+                <!-- HTML Textarea -->
+                <div id="body-tab-html" class="space-y-1">
+                  <textarea id="send-html-body" rows="6" placeholder="<h1>Hello</h1><p>Your HTML content here...</p>" class="w-full font-mono text-xs bg-slate-900 border border-slate-700 rounded-xl p-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-brand transition"></textarea>
+                </div>
+
+                <!-- Plain Text Textarea -->
+                <div id="body-tab-text" class="space-y-1 hidden">
+                  <textarea id="send-text-body" rows="6" placeholder="Plain text fallback email body..." class="w-full text-xs bg-slate-900 border border-slate-700 rounded-xl p-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-brand transition"></textarea>
+                </div>
+
+                <!-- HTML Live Preview Box -->
+                <div id="body-tab-preview" class="hidden bg-white text-slate-900 rounded-xl p-4 min-h-[160px] max-h-[300px] overflow-y-auto border border-slate-700 shadow-inner">
+                  <div id="html-preview-content"></div>
+                </div>
+              </div>
+
+              <!-- Optional DirectMail Parameters Accordion -->
+              <details class="group border border-slate-800 rounded-xl bg-slate-900/50">
+                <summary class="cursor-pointer px-4 py-2.5 text-xs text-slate-400 flex items-center justify-between group-open:border-b group-open:border-slate-800">
+                  <span class="flex items-center gap-2">
+                    <i data-lucide="settings-2" class="w-3.5 h-3.5 text-slate-400"></i>
+                    Optional Parameters (FromAlias, TagName, ReplyTo, AddressType)
+                  </span>
+                  <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 group-open:rotate-180 transition-transform"></i>
+                </summary>
+                <div class="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+                  <div>
+                    <label class="block text-slate-400 mb-1">FromAlias (Display Name)</label>
+                    <input type="text" id="send-from-alias" placeholder="QuickBooks Notification" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white text-xs">
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">TagName (Override)</label>
+                    <input type="text" id="send-tag-name" placeholder="receipts" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white text-xs">
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">AddressType</label>
+                    <select id="send-address-type" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white text-xs">
+                      <option value="1" selected>1 - Console Verified Address</option>
+                      <option value="0">0 - Random/Trigger Address</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">ReplyToAddress</label>
+                    <select id="send-reply-to" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white text-xs">
+                      <option value="false">false - Disabled</option>
+                      <option value="true">true - Enabled</option>
+                    </select>
+                  </div>
+                </div>
+              </details>
+
+              <!-- In-Workflow Direct Scheduling Section -->
+              <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 space-y-3">
+                <div class="flex items-center justify-between">
+                  <label class="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-200">
+                    <input type="checkbox" id="single-sched-toggle" onchange="toggleSingleSchedFields()" class="w-4 h-4 rounded text-blue-600 bg-slate-900 border-slate-700 focus:ring-blue-500">
+                    <span class="flex items-center gap-1.5">
+                      <i data-lucide="calendar-clock" class="w-4 h-4 text-blue-400"></i>
+                      <span>Schedule this email for future execution</span>
+                    </span>
+                  </label>
+                  <span id="single-sched-status-pill" class="text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-400">Send Immediately</span>
+                </div>
+                <div id="single-sched-fields" class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-slate-800/80 hidden">
+                  <div>
+                    <label class="block text-[11px] text-slate-400 mb-1">Execution Date</label>
+                    <input type="date" id="single-sched-date" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] text-slate-400 mb-1">Execution Time</label>
+                    <input type="time" id="single-sched-time" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] text-slate-400 mb-1">Timezone</label>
+                    <select id="single-sched-tz" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                      <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+                      <option value="UTC">UTC</option>
+                      <option value="Asia/Singapore">Asia/Singapore (SGT)</option>
+                      <option value="Europe/Berlin">Europe/Berlin (CET)</option>
+                      <option value="America/New_York">America/New_York (EST)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+                <button type="button" onclick="openScheduleModalFromSendForm()" class="px-4 py-2.5 rounded-xl border border-blue-500/30 bg-blue-500/10 hover:bg-blue-500/20 text-blue-300 text-sm font-medium transition flex items-center gap-2">
+                  <i data-lucide="calendar" class="w-4 h-4 text-blue-400"></i>
+                  <span>Schedule Modal...</span>
+                </button>
+
+                <button type="submit" id="btn-send-now" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-500 hover:to-amber-400 text-white text-sm font-semibold shadow-lg shadow-orange-900/30 transition flex items-center gap-2">
+                  <i data-lucide="send" class="w-4 h-4"></i>
+                  <span id="btn-send-now-label">Send Now</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- TAB CONTENT 2: BULK CAMPAIGN -->
+        <div id="tasks-content-bulk" class="space-y-6 hidden">
+          <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+              <div>
+                <h3 class="font-semibold text-base text-white flex items-center gap-2">
+                  <i data-lucide="users" class="w-4 h-4 text-purple-400"></i>
+                  Bulk Email Campaign
+                </h3>
+                <p class="text-xs text-slate-400">Batch dispatching with rate limiting, safety confirmation, and CSV upload</p>
+              </div>
+              <div class="flex items-center gap-1.5 bg-slate-900 p-1 rounded-xl border border-slate-800" id="bulk-region-selector">
+                <button type="button" onclick="selectBulkRegion('singapore')" data-region="singapore" class="bulk-region-pill px-3 py-1.5 rounded-lg text-xs font-medium transition bg-brand text-white shadow">🇸🇬 Singapore</button>
+                <button type="button" onclick="selectBulkRegion('germany')" data-region="germany" class="bulk-region-pill px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition">🇩🇪 Germany</button>
+                <button type="button" onclick="selectBulkRegion('united_states')" data-region="united_states" class="bulk-region-pill px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition">🇺🇸 US</button>
+              </div>
+            </div>
+
+            <form id="bulk-send-form" onsubmit="handleBulkSubmit(event)" class="space-y-5">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label class="block text-xs font-medium text-slate-300 mb-1.5">Campaign Name</label>
+                  <input type="text" id="bulk-campaign-name" placeholder="e.g. October Product Announcement" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-500">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-slate-300 mb-1.5">Verified Sender Address <span class="text-rose-400">*</span></label>
+                  <select id="bulk-sender-select" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500 transition"></select>
+                </div>
+              </div>
+
+              <!-- Recipient Input: CSV Drag & Drop or Manual Paste -->
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <label class="block text-xs font-medium text-slate-300">
+                    Recipient List <span class="text-rose-400">*</span>
+                  </label>
+                  <button type="button" onclick="importFromAppPoolToBulk()" class="text-xs text-pink-400 hover:underline flex items-center gap-1">
+                    <i data-lucide="download" class="w-3 h-3"></i> Load from Application Pool
+                  </button>
+                </div>
+
+                <!-- Drag & Drop Zone -->
+                <div id="csv-drop-zone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleFileDrop(event)" class="border-2 border-dashed border-slate-700 hover:border-purple-500/70 bg-slate-900/50 rounded-xl p-4 text-center cursor-pointer transition">
+                  <input type="file" id="csv-file-input" accept=".csv,.txt" onchange="handleFileSelect(event)" class="hidden">
+                  <div class="flex flex-col items-center gap-1.5" onclick="document.getElementById('csv-file-input').click()">
+                    <i data-lucide="upload-cloud" class="w-6 h-6 text-purple-400"></i>
+                    <p class="text-xs text-slate-300"><span class="font-semibold text-purple-400">Click to upload CSV</span> or drag and drop</p>
+                    <p class="text-[11px] text-slate-500">Supports standard CSV with 'email' column or plain email lists</p>
+                  </div>
+                </div>
+
+                <!-- Paste Textarea -->
+                <textarea id="bulk-recipients-text" oninput="debounceValidateRecipients()" rows="4" placeholder="Or paste recipient emails here (one per line, or separated by commas)..." class="w-full font-mono text-xs bg-slate-900 border border-slate-700 rounded-xl p-3 text-white placeholder-slate-500 focus:outline-none focus:border-purple-500"></textarea>
+
+                <!-- Live Validation Breakdown Bar -->
+                <div id="validation-report-bar" class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs">
+                  <div class="flex items-center gap-4">
+                    <span class="text-slate-400">Validation Status:</span>
+                    <span class="flex items-center gap-1 text-emerald-400 font-medium">
+                      <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                      <span id="stat-valid-count">0</span> Valid
+                    </span>
+                    <span class="flex items-center gap-1 text-rose-400 font-medium">
+                      <i data-lucide="x-circle" class="w-3.5 h-3.5"></i>
+                      <span id="stat-invalid-count">0</span> Invalid
+                    </span>
+                    <span class="flex items-center gap-1 text-amber-400 font-medium">
+                      <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                      <span id="stat-duplicate-count">0</span> Duplicates
+                    </span>
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    Total Parsed: <span id="stat-total-count" class="font-mono text-slate-300">0</span>
+                  </div>
+                </div>
+
+                <!-- Recipient Exclusion Management Panel -->
+                <div id="bulk-exclusion-panel" class="bg-slate-900/60 border border-purple-500/20 rounded-xl p-3.5 space-y-3 hidden">
+                  <div class="flex flex-wrap items-center justify-between gap-2">
+                    <span class="font-semibold text-xs text-white flex items-center gap-1.5">
+                      <i data-lucide="user-x" class="w-3.5 h-3.5 text-purple-400"></i>
+                      Target Audience & Exclusions
+                    </span>
+                    <span id="bulk-exclusion-summary" class="text-[11px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono font-medium">
+                      0 selected • 0 excluded • 0 queued
+                    </span>
+                  </div>
+
+                  <div class="p-2.5 rounded-lg bg-purple-950/20 border border-purple-500/30 text-[11px] text-purple-200 flex items-start gap-2">
+                    <i data-lucide="info" class="w-3.5 h-3.5 text-purple-400 shrink-0 mt-0.5"></i>
+                    <span>Excluding a recipient from this task removes them from this campaign dispatch only and does <strong>NOT</strong> delete them from your master Recipient Pool.</span>
+                  </div>
+
+                  <!-- Excluded Recipients Chip List -->
+                  <div id="bulk-excluded-container" class="space-y-1.5 hidden">
+                    <div class="flex items-center justify-between text-[11px]">
+                      <span class="text-rose-400 font-semibold flex items-center gap-1">
+                        <i data-lucide="ban" class="w-3 h-3"></i> Excluded Recipients (<span id="bulk-excluded-count-badge">0</span>)
+                      </span>
+                      <button type="button" onclick="restoreAllExcludedRecipients()" class="text-xs text-purple-400 hover:underline">Restore All</button>
+                    </div>
+                    <div id="bulk-excluded-chips" class="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto p-2 bg-slate-950/70 border border-rose-500/20 rounded-lg">
+                      <!-- Rendered dynamically -->
+                    </div>
+                  </div>
+
+                  <!-- Active Recipients with Quick Exclude -->
+                  <div id="bulk-active-preview-container" class="space-y-1.5">
+                    <div class="flex flex-wrap items-center justify-between text-[11px] text-slate-400 gap-2">
+                      <div class="flex items-center gap-2">
+                        <input type="text" id="bulk-audience-search" oninput="filterAudiencePreview()" placeholder="Filter audience..." class="bg-slate-950 border border-slate-800 rounded px-2 py-0.5 text-[11px] text-white placeholder-slate-500 w-36 focus:outline-none focus:border-purple-500">
+                        <button type="button" onclick="excludeSelectedAudience()" class="px-2 py-0.5 rounded bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[10px]">Exclude Selected</button>
+                      </div>
+                      <button type="button" onclick="toggleAudienceListVisibility()" id="btn-toggle-audience" class="text-purple-400 hover:underline">Show recipient details</button>
+                    </div>
+                    <div id="bulk-active-recipient-list" class="hidden max-h-48 overflow-y-auto space-y-1 p-2 bg-slate-950/70 border border-slate-800 rounded-lg text-xs">
+                      <!-- Rendered dynamically -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Template & Tag Selection -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label class="block text-xs font-medium text-slate-300 mb-1.5">
+                    Email Template (Auto-Subject & Content)
+                  </label>
+                  <select id="bulk-template-select" onchange="handleSelectBulkTemplate(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500">
+                    <option value="">-- Custom Compose --</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-slate-300 mb-1.5">
+                    Email Tag (Classification)
+                  </label>
+                  <select id="bulk-tag-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500">
+                    <option value="">-- None --</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Subject -->
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1.5">Subject <span class="text-rose-400">*</span></label>
+                <input type="text" id="bulk-subject" required placeholder="Important Announcement from Our Team" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-500">
+              </div>
+
+              <!-- Body -->
+              <div class="space-y-1">
+                <label class="block text-xs font-medium text-slate-300">HTML or Plain Text Body <span class="text-rose-400">*</span></label>
+                <textarea id="bulk-body" rows="5" placeholder="Campaign content... (HTML supported)" class="w-full text-xs bg-slate-900 border border-slate-700 rounded-xl p-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-purple-500"></textarea>
+              </div>
+
+              <!-- Bulk In-Workflow Direct Scheduling Section -->
+              <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 space-y-3">
+                <div class="flex items-center justify-between">
+                  <label class="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-200">
+                    <input type="checkbox" id="bulk-sched-toggle" onchange="toggleBulkSchedFields()" class="w-4 h-4 rounded text-purple-600 bg-slate-900 border-slate-700 focus:ring-purple-500">
+                    <span class="flex items-center gap-1.5">
+                      <i data-lucide="calendar-clock" class="w-4 h-4 text-purple-400"></i>
+                      <span>Schedule this campaign for future execution</span>
+                    </span>
+                  </label>
+                  <span id="bulk-sched-status-pill" class="text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-400">Send Immediately</span>
+                </div>
+                <div id="bulk-sched-fields" class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-slate-800/80 hidden">
+                  <div>
+                    <label class="block text-[11px] text-slate-400 mb-1">Execution Date</label>
+                    <input type="date" id="bulk-sched-date" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] text-slate-400 mb-1">Execution Time</label>
+                    <input type="time" id="bulk-sched-time" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] text-slate-400 mb-1">Timezone</label>
+                    <select id="bulk-sched-tz" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                      <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+                      <option value="UTC">UTC</option>
+                      <option value="Asia/Singapore">Asia/Singapore (SGT)</option>
+                      <option value="Europe/Berlin">Europe/Berlin (CET)</option>
+                      <option value="America/New_York">America/New_York (EST)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pre-flight Bulk Submit Button -->
+              <div class="flex items-center justify-end pt-3 border-t border-slate-800">
+                <button type="button" onclick="triggerBulkSafetyModal()" class="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold shadow-lg shadow-purple-950/40 transition flex items-center gap-2">
+                  <i data-lucide="shield-check" class="w-4 h-4"></i>
+                  <span>Review & Launch Campaign</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- TAB CONTENT 3: ALIBABA CLOUD BATCH TASKS -->
+        <div id="tasks-content-dmtasks" class="space-y-6 hidden">
+          <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+              <div>
+                <h3 class="font-bold text-base text-white flex items-center gap-2">
+                  <i data-lucide="list-checks" class="w-4 h-4 text-brand"></i>
+                  Alibaba Cloud DirectMail Batch Tasks
+                </h3>
+                <p class="text-xs text-slate-400">Official batch tasks executed on Alibaba Cloud infrastructure (QueryTaskByParam)</p>
+              </div>
+              <button onclick="loadAlibabaTasksTable()" class="p-2 bg-slate-900 border border-slate-700 text-slate-300 hover:text-white rounded-xl text-xs">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="text-slate-400 border-b border-slate-800 uppercase tracking-wider text-[11px] bg-slate-900/50">
+                  <tr>
+                    <th class="py-3 px-4">Task ID</th>
+                    <th class="py-3 px-4">Template Name</th>
+                    <th class="py-3 px-4">Receivers Name</th>
+                    <th class="py-3 px-4">Address Type</th>
+                    <th class="py-3 px-4">Status</th>
+                    <th class="py-3 px-4">Created Time (UTC)</th>
+                  </tr>
+                </thead>
+                <tbody id="dmtasks-table-body" class="divide-y divide-slate-800">
+                  <tr><td colspan="6" class="text-center py-6 text-slate-500 italic">Loading tasks from Alibaba Cloud DirectMail...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB CONTENT 4: AUDIT HISTORY -->
+        <div id="tasks-content-history" class="space-y-6 hidden">
+          <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+              <div>
+                <h3 class="font-semibold text-base text-white flex items-center gap-2">
+                  <i data-lucide="history" class="w-4 h-4 text-emerald-400"></i>
+                  Email Audit Log
+                </h3>
+                <p class="text-xs text-slate-400">Audit trail of emails dispatched through this agent</p>
+              </div>
+              <!-- Search & Filters -->
+              <div class="flex flex-wrap items-center gap-2">
+                <input type="text" id="history-search" onkeyup="handleHistoryFilterChange()" placeholder="Search recipient, subject..." class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 w-44 focus:outline-none focus:border-brand">
+                <select id="history-status-filter" onchange="handleHistoryFilterChange()" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-300">
+                  <option value="">All Statuses</option>
+                  <option value="sent">Sent</option>
+                  <option value="failed">Failed</option>
+                  <option value="scheduled">Scheduled</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- History Table -->
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="text-slate-400 border-b border-slate-800 uppercase tracking-wider text-[11px] bg-slate-900/50">
+                  <tr>
+                    <th class="py-3 px-4">Date / Time (UTC)</th>
+                    <th class="py-3 px-4">Recipient</th>
+                    <th class="py-3 px-4">Sender</th>
+                    <th class="py-3 px-4">Region</th>
+                    <th class="py-3 px-4">Subject</th>
+                    <th class="py-3 px-4">Status</th>
+                    <th class="py-3 px-4 text-right">Details</th>
+                  </tr>
+                </thead>
+                <tbody id="history-table-body" class="divide-y divide-slate-800">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination Bar -->
+            <div class="flex items-center justify-between pt-3 border-t border-slate-800 text-xs text-slate-400">
+              <span id="history-pagination-info">Showing 0 of 0 logs</span>
+              <div class="flex items-center gap-2">
+                <button onclick="changeHistoryPage(-1)" id="btn-prev-page" class="px-2.5 py-1 rounded bg-slate-900 border border-slate-700 hover:bg-slate-800 disabled:opacity-40">Previous</button>
+                <button onclick="changeHistoryPage(1)" id="btn-next-page" class="px-2.5 py-1 rounded bg-slate-900 border border-slate-700 hover:bg-slate-800 disabled:opacity-40">Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 7. VIEW: SCHEDULING ================= -->
+      <section id="view-scheduling" class="view-section space-y-6 hidden">
+        <!-- Sub-Tabs: Schedule New | Scheduled Queue -->
+        <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
+          <button type="button" onclick="setSchedTab('new')" id="sched-tab-new" class="px-4 py-2 rounded-xl text-xs font-semibold bg-blue-600 text-white shadow transition flex items-center gap-2">
+            <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i>
+            <span>Schedule New Email</span>
+          </button>
+          <button type="button" onclick="setSchedTab('queue')" id="sched-tab-queue" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition flex items-center gap-2">
+            <i data-lucide="calendar-clock" class="w-3.5 h-3.5"></i>
+            <span>Scheduled Queue</span>
+          </button>
+        </div>
+
+        <!-- TAB CONTENT 1: SCHEDULE FORM -->
+        <div id="sched-content-new" class="space-y-6">
+          <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6 max-w-3xl mx-auto">
+            <div class="pb-4 border-b border-slate-800">
+              <h3 class="font-semibold text-base text-white flex items-center gap-2">
+                <i data-lucide="calendar-plus" class="w-4 h-4 text-blue-400"></i>
+                Schedule Future Email
+              </h3>
+              <p class="text-xs text-slate-400">Target date, time, and timezone. The scheduler daemon executes reliably in the background.</p>
+            </div>
+
+            <form id="dedicated-schedule-form" onsubmit="handleDedicatedSchedule(event)" class="space-y-5">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label class="block text-xs font-medium text-slate-300 mb-1.5">Target Region <span class="text-rose-400">*</span></label>
+                  <select id="sched-region-select" onchange="updateSchedSenders()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500">
+                    <option value="singapore">🇸🇬 Singapore (ap-southeast-1)</option>
+                    <option value="germany">🇩🇪 Germany (eu-central-1)</option>
+                    <option value="united_states">🇺🇸 United States (us-east-1)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-slate-300 mb-1.5">Verified Sender <span class="text-rose-400">*</span></label>
+                  <select id="sched-sender-select" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500"></select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1.5">Recipient Address <span class="text-rose-400">*</span></label>
+                <input type="email" id="sched-recipient" required placeholder="target@example.com" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500">
+              </div>
+
+              <!-- Date, Time, Timezone Row -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                <div>
+                  <label class="block text-xs font-medium text-slate-300 mb-1">Execution Date <span class="text-rose-400">*</span></label>
+                  <input type="date" id="sched-date" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-slate-300 mb-1">Execution Time <span class="text-rose-400">*</span></label>
+                  <input type="time" id="sched-time" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-slate-300 mb-1">Timezone <span class="text-rose-400">*</span></label>
+                  <select id="sched-timezone" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                    <option value="Asia/Kolkata" selected>Asia/Kolkata (IST +05:30)</option>
+                    <option value="UTC">UTC (+00:00)</option>
+                    <option value="Asia/Singapore">Asia/Singapore (SGT +08:00)</option>
+                    <option value="Europe/Berlin">Europe/Berlin (CET +01:00)</option>
+                    <option value="America/New_York">America/New_York (EST -05:00)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1.5">Subject <span class="text-rose-400">*</span></label>
+                <input type="text" id="sched-subject" required placeholder="Scheduled Reminder" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500">
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1.5">Email Body <span class="text-rose-400">*</span></label>
+                <textarea id="sched-body" rows="4" placeholder="Write your message here..." class="w-full text-xs bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-blue-500"></textarea>
+              </div>
+
+              <div class="flex items-center justify-end pt-3 border-t border-slate-800">
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold shadow-lg shadow-blue-950/40 transition flex items-center gap-2">
+                  <i data-lucide="clock" class="w-4 h-4"></i>
+                  <span>Schedule Email Job</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- TAB CONTENT 2: SCHEDULED QUEUE -->
+        <div id="sched-content-queue" class="space-y-6 hidden">
+          <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+              <div>
+                <h3 class="font-semibold text-base text-white flex items-center gap-2">
+                  <i data-lucide="calendar-clock" class="w-4 h-4 text-cyan-400"></i>
+                  Scheduled Email Queue
+                </h3>
+                <p class="text-xs text-slate-400">Upcoming emails waiting for background execution</p>
+              </div>
+              <button onclick="loadScheduledJobs()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 hover:text-white flex items-center gap-1.5">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Refresh Queue
+              </button>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="text-slate-400 border-b border-slate-800 uppercase tracking-wider text-[11px] bg-slate-900/50">
+                  <tr>
+                    <th class="py-3 px-4">Scheduled Time</th>
+                    <th class="py-3 px-4">Region</th>
+                    <th class="py-3 px-4">Recipient</th>
+                    <th class="py-3 px-4">Subject</th>
+                    <th class="py-3 px-4">Status</th>
+                    <th class="py-3 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="scheduled-table-body" class="divide-y divide-slate-800">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Scheduled Bulk Campaigns Section -->
+            <div class="pt-5 border-t border-slate-800 space-y-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                    <i data-lucide="layers" class="w-3.5 h-3.5 text-blue-400"></i>
+                    Scheduled Bulk Campaigns
+                  </h4>
+                  <p class="text-[11px] text-slate-400">Campaigns scheduled for background execution</p>
+                </div>
+                <button onclick="loadScheduledCampaignsTable()" class="text-xs px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 hover:text-white flex items-center gap-1">
+                  <i data-lucide="refresh-cw" class="w-3 h-3"></i> Refresh Campaigns
+                </button>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead class="text-slate-400 border-b border-slate-800 uppercase tracking-wider text-[11px] bg-slate-900/50">
+                    <tr>
+                      <th class="py-3 px-4">Campaign Name</th>
+                      <th class="py-3 px-4">Email Tag</th>
+                      <th class="py-3 px-4">Template</th>
+                      <th class="py-3 px-4">Sender</th>
+                      <th class="py-3 px-4">Recipients</th>
+                      <th class="py-3 px-4">Scheduled Date/Time</th>
+                      <th class="py-3 px-4">Timezone</th>
+                      <th class="py-3 px-4 text-right">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="scheduled-campaigns-table-body" class="divide-y divide-slate-800">
+                    <tr><td colspan="8" class="text-center py-6 text-slate-500 italic">Loading scheduled campaigns...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 8. VIEW: DELIVERY ================= -->
+      <section id="view-delivery" class="view-section space-y-6 hidden">
+        <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="font-bold text-base text-white flex items-center gap-2">
+                  <i data-lucide="bar-chart-2" class="w-4 h-4 text-teal-400"></i>
+                  DirectMail Delivery Analytics
+                </h3>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 font-mono border border-teal-500/30 flex items-center gap-1">
+                  <i data-lucide="shield-check" class="w-3 h-3 text-teal-400"></i> Authoritative DirectMail Data
+                </span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">Live metrics queried directly from Alibaba Cloud DirectMail API (SenderStatisticsByTagNameAndBatchID)</p>
+            </div>
+            <!-- Date Filter Presets & Reconcile Button -->
+            <div class="flex flex-wrap items-center gap-2">
+              <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs">
+                <button type="button" onclick="setDeliveryRange('today')" id="btn-deliv-today" class="px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition">Today</button>
+                <button type="button" onclick="setDeliveryRange('yesterday')" id="btn-deliv-yesterday" class="px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition">Yesterday</button>
+                <button type="button" onclick="setDeliveryRange('7d')" id="btn-deliv-7d" class="px-3 py-1.5 rounded-lg font-medium bg-teal-600 text-white shadow transition">Last 7 Days</button>
+                <button type="button" onclick="setDeliveryRange('30d')" id="btn-deliv-30d" class="px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition">Last 30 Days</button>
+              </div>
+              <button type="button" onclick="triggerReconciliation()" id="btn-reconcile-deliv" class="px-3.5 py-2 rounded-xl bg-teal-600/20 hover:bg-teal-600 text-teal-300 hover:text-white border border-teal-500/30 text-xs font-semibold flex items-center gap-1.5 transition shadow">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                <span>Reconcile DirectMail</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Explicit Custom Date Range & Tag Filter Bar -->
+          <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/50 p-3 rounded-xl border border-slate-800 text-xs">
+            <div class="flex flex-wrap items-center gap-3">
+              <div class="flex items-center gap-1.5">
+                <span class="text-slate-400 font-medium">Tag Filter:</span>
+                <select id="deliv-tag-filter" onchange="loadDeliveryStats()" class="bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1 text-xs focus:outline-none focus:border-teal-500">
+                  <option value="">All Email Tags</option>
+                </select>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-slate-400 font-medium">Date Range:</span>
+                <input type="date" id="deliv-custom-start" class="bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1 text-xs">
+                <span class="text-slate-500">to</span>
+                <input type="date" id="deliv-custom-end" class="bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1 text-xs">
+                <button type="button" onclick="applyDeliveryCustomDateRange()" class="px-3.5 py-1 bg-teal-600 hover:bg-teal-500 text-white font-semibold rounded-lg text-xs transition shadow">Apply</button>
+              </div>
+            </div>
+            <div class="text-[11px] text-slate-400">
+              Provider Endpoint: <span id="deliv-region-badge" class="font-mono text-cyan-300 font-semibold uppercase">SINGAPORE</span>
+            </div>
+          </div>
+
+          <!-- Interactive Clickable Delivery & Engagement Metrics (8 Cards) -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Delivery & Transmission Health (Click any card to inspect recipients)</span>
+              <span class="text-[10px] text-teal-400 flex items-center gap-1">
+                <i data-lucide="mouse-pointer" class="w-3 h-3"></i> Click card for recipient drill-down
+              </span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <!-- Total Requests -->
+              <div onclick="openDeliveryDrillDown('')" class="bg-slate-900/70 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 p-4 rounded-xl space-y-1 cursor-pointer transition shadow hover:shadow-teal-950/20 group">
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                  <span>Total Requests Sent</span>
+                  <i data-lucide="send" class="w-3.5 h-3.5 text-slate-400 group-hover:text-teal-400 transition"></i>
+                </div>
+                <p id="deliv-stat-requests" class="text-2xl font-bold text-white font-mono">0</p>
+                <span class="text-[10px] text-slate-500 block">DirectMail requestCount</span>
+              </div>
+
+              <!-- Successful -->
+              <div onclick="openDeliveryDrillDown('successful')" class="bg-slate-900/70 hover:bg-slate-900 border border-slate-800 hover:border-emerald-500/40 p-4 rounded-xl space-y-1 cursor-pointer transition shadow hover:shadow-emerald-950/20 group">
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                  <span>Delivery Success Rate</span>
+                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-400"></i>
+                </div>
+                <div class="flex items-baseline gap-2">
+                  <span id="deliv-stat-delivery-rate" class="text-2xl font-bold text-emerald-400 font-mono">100%</span>
+                  <span id="deliv-stat-success-count" class="text-xs text-slate-400 font-mono">(0 ok)</span>
+                </div>
+                <span class="text-[10px] text-emerald-400/80 block">Click to view delivered recipients</span>
+              </div>
+
+              <!-- Failed -->
+              <div onclick="openDeliveryDrillDown('failed')" class="bg-slate-900/70 hover:bg-slate-900 border border-slate-800 hover:border-rose-500/40 p-4 rounded-xl space-y-1 cursor-pointer transition shadow hover:shadow-rose-950/20 group">
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                  <span>Failure Rate</span>
+                  <i data-lucide="x-circle" class="w-3.5 h-3.5 text-rose-400"></i>
+                </div>
+                <div class="flex items-baseline gap-2">
+                  <span id="deliv-stat-failure-rate" class="text-2xl font-bold text-rose-400 font-mono">0%</span>
+                  <span id="deliv-stat-failed-count" class="text-xs text-slate-400 font-mono">(0 failed)</span>
+                </div>
+                <span class="text-[10px] text-rose-400/80 block">Click to view failed recipients</span>
+              </div>
+
+              <!-- Bounced -->
+              <div onclick="openDeliveryDrillDown('bounced')" class="bg-slate-900/70 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/40 p-4 rounded-xl space-y-1 cursor-pointer transition shadow hover:shadow-amber-950/20 group">
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                  <span>Bounce / Unavailable</span>
+                  <i data-lucide="alert-octagon" class="w-3.5 h-3.5 text-amber-400"></i>
+                </div>
+                <div class="flex items-baseline gap-2">
+                  <span id="deliv-stat-bounce-rate" class="text-2xl font-bold text-amber-400 font-mono">0%</span>
+                  <span id="deliv-stat-unavailable-count" class="text-xs text-slate-400 font-mono">(0 unavail)</span>
+                </div>
+                <span class="text-[10px] text-amber-400/80 block">Click to view bounced recipients</span>
+              </div>
+            </div>
+
+            <!-- Row 2: Engagement & Suppression Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-1">
+              <!-- Invalid Addresses -->
+              <div onclick="openDeliveryDrillDown('invalid')" class="bg-slate-900/70 hover:bg-slate-900 border border-slate-800 hover:border-red-500/40 p-4 rounded-xl space-y-1 cursor-pointer transition shadow hover:shadow-red-950/20 group">
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                  <span>Invalid / Suppressed</span>
+                  <i data-lucide="user-x" class="w-3.5 h-3.5 text-rose-400"></i>
+                </div>
+                <div class="flex items-baseline gap-2">
+                  <span id="deliv-stat-invalid-count" class="text-2xl font-bold text-rose-300 font-mono">0</span>
+                  <span class="text-xs text-slate-400 font-mono">addresses</span>
+                </div>
+                <span class="text-[10px] text-slate-500 block">DirectMail QueryInvalidAddress</span>
+              </div>
+
+              <!-- Open Rate & Counts -->
+              <div onclick="openDeliveryDrillDown('opened')" class="bg-slate-900/70 hover:bg-slate-900 border border-slate-800 hover:border-blue-500/40 p-4 rounded-xl space-y-1 cursor-pointer transition shadow hover:shadow-blue-950/20 group">
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                  <span>Open Rate</span>
+                  <i data-lucide="mail-open" class="w-3.5 h-3.5 text-blue-400"></i>
+                </div>
+                <div class="flex items-baseline gap-2">
+                  <span id="deliv-stat-open-rate" class="text-2xl font-bold text-blue-400 font-mono">0.0%</span>
+                  <span id="deliv-stat-unique-open-rate" class="text-xs text-slate-400 font-mono">(0% uniq)</span>
+                </div>
+                <span class="text-[10px] text-blue-300/80 block">Opens: <b id="deliv-stat-open-count" class="font-mono">0</b> total • <b id="deliv-stat-unique-open-count" class="font-mono">0</b> unique</span>
+              </div>
+
+              <!-- Click Rate & Counts -->
+              <div onclick="openDeliveryDrillDown('clicked')" class="bg-slate-900/70 hover:bg-slate-900 border border-slate-800 hover:border-purple-500/40 p-4 rounded-xl space-y-1 cursor-pointer transition shadow hover:shadow-purple-950/20 group">
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                  <span>Click Rate</span>
+                  <i data-lucide="mouse-pointer-click" class="w-3.5 h-3.5 text-purple-400"></i>
+                </div>
+                <div class="flex items-baseline gap-2">
+                  <span id="deliv-stat-click-rate" class="text-2xl font-bold text-purple-400 font-mono">0.0%</span>
+                  <span id="deliv-stat-unique-click-rate" class="text-xs text-slate-400 font-mono">(0% uniq)</span>
+                </div>
+                <span class="text-[10px] text-purple-300/80 block">Clicks: <b id="deliv-stat-click-count" class="font-mono">0</b> total • <b id="deliv-stat-unique-click-count" class="font-mono">0</b> unique</span>
+              </div>
+
+              <!-- Recipient Drilldown Direct Trigger -->
+              <div onclick="openDeliveryDrillDown('')" class="bg-gradient-to-br from-teal-950/30 to-slate-900 border border-teal-500/30 hover:border-teal-400 p-4 rounded-xl space-y-2 cursor-pointer transition shadow hover:shadow-teal-950/40 group flex flex-col justify-between">
+                <div class="flex items-center justify-between text-xs text-teal-300 font-semibold">
+                  <span>Recipient Drill-Down</span>
+                  <i data-lucide="list-filter" class="w-4 h-4 text-teal-400"></i>
+                </div>
+                <p class="text-[11px] text-slate-300">View individual recipient delivery timestamps, opens, clicks & failure reasons.</p>
+                <div class="text-[10px] text-teal-400 font-medium flex items-center gap-1">
+                  <span>Open Drill-Down Table</span>
+                  <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filtered CSV Export Toolbar -->
+          <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 text-xs">
+            <span class="text-slate-300 flex items-center gap-1.5 font-semibold">
+              <i data-lucide="download" class="w-4 h-4 text-teal-400"></i>
+              Export Delivery Records (CSV):
+            </span>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="exportDeliveryCsv('')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs flex items-center gap-1.5 transition">
+                <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-slate-400"></i> All Records CSV
+              </button>
+              <button type="button" onclick="exportDeliveryCsv('successful')" class="px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs flex items-center gap-1.5 transition">
+                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Successful Only CSV
+              </button>
+              <button type="button" onclick="exportDeliveryCsv('failed')" class="px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs flex items-center gap-1.5 transition">
+                <i data-lucide="x-circle" class="w-3.5 h-3.5"></i> Failed Only CSV
+              </button>
+              <button type="button" onclick="exportDeliveryCsv('invalid')" class="px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs flex items-center gap-1.5 transition">
+                <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Invalid Addresses CSV
+              </button>
+            </div>
+          </div>
+
+          <!-- Daily Breakdown Table -->
+          <div class="space-y-2">
+            <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Daily Historical Breakdown</h4>
+            <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/50">
+              <table class="w-full text-left text-xs">
+                <thead class="text-slate-400 border-b border-slate-800 uppercase tracking-wider text-[11px] bg-slate-900/80">
+                  <tr>
+                    <th class="py-3 px-4">Date</th>
+                    <th class="py-3 px-4">Requests</th>
+                    <th class="py-3 px-4">Success</th>
+                    <th class="py-3 px-4">Failed</th>
+                    <th class="py-3 px-4">Unavailable / Bounced</th>
+                    <th class="py-3 px-4 text-right">Success Rate</th>
+                  </tr>
+                </thead>
+                <tbody id="delivery-stats-tbody" class="divide-y divide-slate-800">
+                  <tr><td colspan="6" class="text-center py-6 text-slate-500 italic">No delivery traffic recorded in this date range.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 9. VIEW: TRACKING ================= -->
+      <section id="view-tracking" class="view-section space-y-6 hidden">
+        <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="font-bold text-base text-white flex items-center gap-2">
+                  <i data-lucide="activity" class="w-4 h-4 text-amber-400"></i>
+                  Granular Tracking Events Feed
+                </h3>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono border border-amber-500/30 flex items-center gap-1">
+                  <i data-lucide="shield-check" class="w-3 h-3 text-amber-400"></i> Alibaba Cloud RPC Events
+                </span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">Live individual email delivery statuses & SMTP response codes (SenderStatisticsDetailByParam)</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="triggerReconciliation()" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-white border border-amber-500/30 text-xs font-semibold flex items-center gap-1.5 transition">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                <span>Reconcile with DirectMail</span>
+              </button>
+              <input type="text" id="tracking-search" onkeyup="filterTrackingFeed()" placeholder="Search recipient..." class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 w-48 focus:outline-none focus:border-brand">
+              <button onclick="loadTrackingFeed()" class="p-2 bg-slate-900 border border-slate-700 text-slate-300 hover:text-white rounded-xl text-xs">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Tracking Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="text-slate-400 border-b border-slate-800 uppercase tracking-wider text-[11px] bg-slate-900/50">
+                <tr>
+                  <th class="py-3 px-4">Event Time</th>
+                  <th class="py-3 px-4">Recipient</th>
+                  <th class="py-3 px-4">Sender Account</th>
+                  <th class="py-3 px-4">Status</th>
+                  <th class="py-3 px-4">DirectMail Message / Classification</th>
+                </tr>
+              </thead>
+              <tbody id="tracking-table-body" class="divide-y divide-slate-800">
+                <tr><td colspan="5" class="text-center py-6 text-slate-500 italic">Loading tracking events from Alibaba Cloud...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 10. VIEW: ANALYSIS ================= -->
+      <section id="view-analysis" class="view-section space-y-6 hidden">
+        <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+          <div class="pb-4 border-b border-slate-800 flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-base text-white flex items-center gap-2">
+                <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-400"></i>
+                Account Health & Quota Inspector
+              </h3>
+              <p class="text-xs text-slate-400">Authentic account standing, channel allocation, and DNS configuration checklist</p>
+            </div>
+            <button onclick="loadAnalysisView()" class="p-2 bg-slate-900 border border-slate-700 text-slate-300 hover:text-white rounded-xl text-xs">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- Gauge and Health Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <!-- Quota Level Gauge -->
+            <div class="bg-slate-900/70 p-5 rounded-2xl border border-slate-800 space-y-3">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Account Quota Level</span>
+              <div class="flex items-baseline gap-2">
+                <span id="analysis-level" class="text-3xl font-extrabold text-brand font-mono">5</span>
+                <span class="text-xs text-slate-400">/ 10 (DirectMail Tier)</span>
+              </div>
+              <div class="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden">
+                <div id="analysis-level-bar" class="bg-gradient-to-r from-orange-500 to-amber-400 h-full rounded-full" style="width: 50%"></div>
+              </div>
+              <p class="text-[11px] text-slate-500">Higher levels unlock higher daily quotas as your sender reputation and volume grow.</p>
+            </div>
+
+            <!-- IP Channel Type -->
+            <div class="bg-slate-900/70 p-5 rounded-2xl border border-slate-800 space-y-3">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">IP Channel Type</span>
+              <div class="flex items-baseline gap-2">
+                <span id="analysis-channel" class="text-2xl font-bold text-white font-mono">normal</span>
+              </div>
+              <p class="text-[11px] text-slate-400">Operating on Alibaba Cloud high-reputation shared DirectMail pool with automatic warm-up.</p>
+              <div class="text-[10px] text-emerald-400 flex items-center gap-1">
+                <i data-lucide="shield-check" class="w-3 h-3"></i> Anti-Spam (Dayu) Status: Normal
+              </div>
+            </div>
+
+            <!-- Quota Capacity Summary -->
+            <div class="bg-slate-900/70 p-5 rounded-2xl border border-slate-800 space-y-3">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Volume Allocation</span>
+              <div class="space-y-1 text-xs">
+                <div class="flex justify-between text-slate-300">
+                  <span>Daily Quota:</span>
+                  <span id="analysis-daily-quota" class="font-mono font-bold text-white">10,000</span>
+                </div>
+                <div class="flex justify-between text-slate-300">
+                  <span>Monthly Quota:</span>
+                  <span id="analysis-month-quota" class="font-mono font-bold text-white">300,000</span>
+                </div>
+                <div class="flex justify-between text-slate-300">
+                  <span>Daily Remaining Free:</span>
+                  <span id="analysis-free-quota" class="font-mono text-slate-400">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Domain Authentication Checklist -->
+          <div class="space-y-3">
+            <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Domain Authentication Health Checklist</h4>
+            <div id="analysis-domain-checklist" class="space-y-3 text-xs">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 11. VIEW: AUDIT TRAIL ================= -->
+      <section id="view-audit" class="view-section space-y-6 hidden">
+        <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="font-bold text-base text-white flex items-center gap-2">
+                  <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+                  Audit Trail & Governance
+                </h3>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/30">Immutable Trail</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">Audit log tracking template reviews, DirectMail synchronizations, task recipient exclusions, and provider reconciliation runs</p>
+            </div>
+            <button onclick="loadAuditLogsTable()" class="p-2 bg-slate-900 border border-slate-700 text-slate-300 hover:text-white rounded-xl text-xs flex items-center gap-1.5">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              <span>Refresh Log</span>
+            </button>
+          </div>
+
+          <!-- Date Range & Action Filters -->
+          <div class="flex flex-wrap items-center justify-between gap-3 text-xs bg-slate-900/50 p-3.5 rounded-xl border border-slate-800">
+            <div class="flex flex-wrap items-center gap-2">
+              <div class="flex items-center gap-1">
+                <span class="text-slate-400 text-[11px]">Date:</span>
+                <input type="date" id="audit-start-date" class="bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-2 py-1 text-xs">
+                <span class="text-slate-500">to</span>
+                <input type="date" id="audit-end-date" class="bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-2 py-1 text-xs">
+              </div>
+
+              <select id="audit-action-filter" class="bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1 text-xs">
+                <option value="">All Actions</option>
+                <option value="template_created">Template Created</option>
+                <option value="template_updated">Template Updated</option>
+                <option value="template_review_updated">Review Status Changed</option>
+                <option value="template_synced">DirectMail Synchronized</option>
+                <option value="template_deleted">Template Deleted</option>
+                <option value="bulk_campaign_created">Bulk Task Dispatched</option>
+                <option value="reconciliation_run">Reconciliation Executed</option>
+                <option value="webhook_received">Webhook Ingestion</option>
+              </select>
+
+              <select id="audit-result-filter" class="bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1 text-xs">
+                <option value="">All Results</option>
+                <option value="success">Success</option>
+                <option value="failed">Failed</option>
+              </select>
+
+              <button type="button" onclick="applyAuditFilters()" class="px-3.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg text-xs transition shadow">Apply</button>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <input type="text" id="audit-search-input" onkeyup="debounceAuditSearch()" placeholder="Search logs..." class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1 text-xs text-white placeholder-slate-500 w-48 focus:outline-none focus:border-emerald-500">
+            </div>
+          </div>
+
+          <!-- Audit Logs Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="text-slate-400 border-b border-slate-800 uppercase tracking-wider text-[11px] bg-slate-900/50">
+                <tr>
+                  <th class="py-3 px-4">Timestamp (UTC)</th>
+                  <th class="py-3 px-4">Action</th>
+                  <th class="py-3 px-4">Object</th>
+                  <th class="py-3 px-4">Actor</th>
+                  <th class="py-3 px-4">Result</th>
+                  <th class="py-3 px-4">Details / Metadata</th>
+                </tr>
+              </thead>
+              <tbody id="audit-logs-table-body" class="divide-y divide-slate-800">
+                <tr><td colspan="6" class="text-center py-6 text-slate-500 italic">Loading audit trail...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 12. VIEW: SETTINGS ================= -->
+      <section id="view-settings" class="view-section space-y-6 hidden">
+        <div class="bg-darkbg-800 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6 max-w-2xl mx-auto">
+          <div class="pb-4 border-b border-slate-800">
+            <h3 class="font-semibold text-base text-white flex items-center gap-2">
+              <i data-lucide="sliders" class="w-4 h-4 text-amber-400"></i>
+              System Settings & Limits
+            </h3>
+            <p class="text-xs text-slate-400">Configure sandbox simulation mode, rate limits, and default preferences</p>
+          </div>
+
+          <form id="settings-form" onsubmit="handleSettingsSave(event)" class="space-y-5 text-xs">
+            <!-- Test Mode Toggle -->
+            <div class="flex items-center justify-between p-4 bg-slate-900/60 rounded-xl border border-slate-800">
+              <div>
+                <label class="font-medium text-white text-sm block">DirectMail Test Sandbox Mode</label>
+                <p class="text-slate-400 text-xs">When enabled, requests simulate Alibaba DirectMail API responses without sending live emails.</p>
+              </div>
+              <input type="checkbox" id="setting-test-mode" class="w-5 h-5 accent-brand rounded cursor-pointer">
+            </div>
+
+            <!-- Rate Limit QPS -->
+            <div class="space-y-1.5">
+              <label class="block font-medium text-slate-300">Rate Limit (QPS - Queries Per Second)</label>
+              <input type="number" id="setting-rate-limit" min="0.1" max="50" step="0.5" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-brand">
+              <p class="text-slate-500 text-[11px]">Recommended: 5 to 10 QPS to comply with Alibaba Cloud account limits.</p>
+            </div>
+
+            <!-- Max Retries -->
+            <div class="space-y-1.5">
+              <label class="block font-medium text-slate-300">Max Retries for Transient Errors</label>
+              <input type="number" id="setting-max-retries" min="1" max="10" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-brand">
+              <p class="text-slate-500 text-[11px]">Automatic exponential backoff will be applied (5s, 20s, 60s).</p>
+            </div>
+
+            <!-- Default Timezone -->
+            <div class="space-y-1.5">
+              <label class="block font-medium text-slate-300">Default Scheduling Timezone</label>
+              <select id="setting-default-timezone" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-brand">
+                <option value="Asia/Kolkata">Asia/Kolkata</option>
+                <option value="UTC">UTC</option>
+                <option value="Asia/Singapore">Asia/Singapore</option>
+                <option value="Europe/Berlin">Europe/Berlin</option>
+                <option value="America/New_York">America/New_York</option>
+              </select>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800 flex justify-end">
+              <button type="submit" class="px-5 py-2 rounded-xl bg-brand hover:bg-brand-hover text-white font-medium text-sm transition shadow">
+                Save Settings
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ================= MODALS & DRAWERS ================= -->
+
+  <!-- Smart Agent Result Modal -->
+  <div id="smart-agent-modal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-darkbg-800 border border-brand/40 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800 shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-brand/20 flex items-center justify-center text-brand">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 id="smart-agent-modal-title" class="text-sm font-bold text-white">Smart Agent Assistant</h3>
+            <span class="text-[11px] text-slate-400">DirectMail Live Intelligence</span>
+          </div>
+        </div>
+        <button onclick="closeSmartAgentModal()" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Agent Markdown Output -->
+      <div class="overflow-y-auto space-y-4 pr-1 text-xs">
+        <div id="smart-agent-markdown-content" class="prose-agent bg-slate-900/60 p-4 rounded-xl border border-slate-800"></div>
+
+        <!-- Collapsible Raw Data Accordion -->
+        <details class="group border border-slate-800 rounded-xl bg-slate-900/40">
+          <summary class="cursor-pointer px-3 py-2 text-[11px] text-slate-400 flex items-center justify-between">
+            <span>Inspect Live DirectMail API Response Data</span>
+            <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <pre id="smart-agent-raw-data" class="code-json text-[11px] m-2"></pre>
+        </details>
+      </div>
+
+      <div class="flex items-center justify-between pt-3 border-t border-slate-800 shrink-0">
+        <div id="smart-agent-actions" class="flex items-center gap-2"></div>
+        <button type="button" onclick="closeSmartAgentModal()" class="px-4 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white bg-slate-800">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reusable Strict Delete Confirmation Modal -->
+  <div id="delete-confirm-modal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-darkbg-800 border border-rose-500/40 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-400 shrink-0">
+          <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 id="delete-modal-title" class="text-base font-bold text-white">Confirm Deletion</h3>
+          <p class="text-xs text-slate-400">This action requires explicit confirmation</p>
+        </div>
+      </div>
+
+      <p id="delete-modal-message" class="text-xs text-slate-300 leading-relaxed bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+        Are you sure you want to delete this resource?
+      </p>
+
+      <p class="text-[11px] text-rose-400/90 bg-rose-500/10 p-2.5 rounded-lg border border-rose-500/20">
+        ⚠️ Warning: This operation will take effect immediately in Alibaba Cloud DirectMail or your local database.
+      </p>
+
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button type="button" onclick="closeDeleteConfirmModal()" class="px-3.5 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white bg-slate-900 border border-slate-700">Cancel</button>
+        <button type="button" id="btn-confirm-delete-action" class="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-rose-600 hover:bg-rose-500 shadow-lg shadow-rose-950/40">Confirm Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Domain DNS Records Inspector Modal -->
+  <div id="domain-dns-modal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-darkbg-800 border border-cyan-500/40 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800 shrink-0">
+        <div class="flex items-center gap-2">
+          <i data-lucide="globe" class="w-4 h-4 text-cyan-400"></i>
+          <h3 class="text-sm font-bold text-white">Domain DNS Verification Records</h3>
+          <span id="domain-dns-title" class="text-xs font-mono text-cyan-300 bg-slate-900 px-2 py-0.5 rounded"></span>
+        </div>
+        <button onclick="closeDomainDnsModal()" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div id="domain-dns-content" class="overflow-y-auto space-y-4 text-xs pr-1">
+        <div class="text-center py-8 text-slate-500 italic">Querying DNS records from Alibaba DirectMail...</div>
+      </div>
+
+      <div class="flex justify-end pt-3 border-t border-slate-800 shrink-0">
+        <button type="button" onclick="closeDomainDnsModal()" class="px-4 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-white">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Template Preview Modal -->
+  <div id="template-preview-modal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-darkbg-800 border border-purple-500/40 rounded-2xl max-w-3xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800 shrink-0">
+        <div>
+          <h3 id="template-preview-name" class="text-sm font-bold text-white">Template Preview</h3>
+          <p id="template-preview-subject" class="text-xs text-slate-400 mt-0.5"></p>
+        </div>
+        <button onclick="closeTemplatePreviewModal()" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="overflow-y-auto space-y-3 flex-1">
+        <div class="bg-white rounded-xl p-4 min-h-[250px] max-h-[400px] overflow-y-auto border border-slate-700 shadow-inner">
+          <iframe id="template-preview-iframe" class="w-full h-72 border-0 bg-white"></iframe>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-3 border-t border-slate-800 shrink-0">
+        <button type="button" id="btn-use-previewed-template" class="px-3.5 py-1.5 bg-brand hover:bg-brand-hover text-white text-xs font-semibold rounded-lg">Use in Email Task →</button>
+        <button type="button" onclick="closeTemplatePreviewModal()" class="px-4 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-white">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Domain Modal -->
+  <div id="add-domain-modal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-darkbg-800 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="plus-circle" class="w-4 h-4 text-cyan-400"></i>
+          Register Domain in DirectMail
+        </h3>
+        <button onclick="closeAddDomainModal()" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 mb-1">Domain Name <span class="text-rose-400">*</span></label>
+          <input type="text" id="new-domain-name" placeholder="mail.yourcompany.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+          <p class="text-[11px] text-slate-500 mt-1">DirectMail will issue CNAME, SPF, and MX authentication records to be configured in your DNS registrar.</p>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
+        <button type="button" onclick="closeAddDomainModal()" class="px-3 py-1.5 rounded-lg text-xs text-slate-400 hover:text-white">Cancel</button>
+        <button type="button" onclick="submitCreateDomain()" class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-brand hover:bg-brand-hover text-white">Add Domain</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Sender Modal -->
+  <div id="add-sender-modal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-darkbg-800 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-400"></i>
+          Add Verified Sender Address
+        </h3>
+        <button onclick="closeAddSenderModal()" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 mb-1">Sender Email Address <span class="text-rose-400">*</span></label>
+          <input type="email" id="add-sender-email" placeholder="support@notificationquickbooks.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1">Reply-To Address (Optional)</label>
+          <input type="email" id="add-sender-reply" placeholder="help@yourcompany.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1">Send Type</label>
+          <select id="add-sender-type" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+            <option value="batch" selected>batch (Recommended for batch campaigns & normal transactional)</option>
+            <option value="trigger">trigger (Verification codes / transactional triggers)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
+        <button type="button" onclick="closeAddSenderModal()" class="px-3 py-1.5 rounded-lg text-xs text-slate-400 hover:text-white">Cancel</button>
+        <button type="button" onclick="confirmAddSender()" class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white">Create Sender</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create / Edit Template Modal -->
+  <div id="create-template-modal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-darkbg-800 border border-purple-500/40 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800 shrink-0">
+        <h3 id="tpl-modal-title" class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="file-code" class="w-4 h-4 text-purple-400"></i>
+          <span>Create Email Template</span>
+        </h3>
+        <button onclick="closeCreateTemplateModal()" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="tpl-edit-id">
+
+      <div class="overflow-y-auto space-y-3 text-xs flex-1 pr-1">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-300 mb-1">Template Name <span class="text-rose-400">*</span></label>
+            <input type="text" id="tpl-name" placeholder="Order Receipt" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+          </div>
+          <div>
+            <label class="block text-slate-300 mb-1">From Nickname / Alias <span class="text-rose-400">*</span></label>
+            <input type="text" id="tpl-nickname" placeholder="QuickBooks Support" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-slate-300 mb-1">Format <span class="text-rose-400">*</span></label>
+            <select id="tpl-format" onchange="toggleTemplateFormatEditor()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+              <option value="html" selected>HTML Template</option>
+              <option value="text">Plain Text</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-300 mb-1">Type <span class="text-rose-400">*</span></label>
+            <select id="tpl-type" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+              <option value="0" selected>0 - Batch Campaign</option>
+              <option value="1">1 - Trigger / Transactional</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-300 mb-1">DirectMail Region</label>
+            <select id="tpl-region" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+              <option value="singapore" selected>🇸🇬 Singapore</option>
+              <option value="germany">🇩🇪 Germany</option>
+              <option value="united_states">🇺🇸 United States</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 mb-1">Subject Line <span class="text-rose-400">*</span></label>
+          <input type="text" id="tpl-subject" placeholder="Your receipt for order {order_id}" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+        </div>
+
+        <!-- Editor Tabs: Code vs Preview -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label id="tpl-body-label" class="text-slate-300">HTML Template Body <span class="text-rose-400">*</span></label>
+            <div class="flex items-center bg-slate-900 p-0.5 rounded-lg border border-slate-800 text-[11px]">
+              <button type="button" onclick="setTplEditorTab('source')" id="btn-tpl-edit-src" class="px-2 py-0.5 rounded font-medium bg-purple-600 text-white">Source</button>
+              <button type="button" onclick="setTplEditorTab('preview')" id="btn-tpl-edit-prev" class="px-2 py-0.5 rounded font-medium text-slate-400 hover:text-white">Live Preview</button>
+            </div>
+          </div>
+
+          <div id="tpl-source-container">
+            <textarea id="tpl-html" rows="8" placeholder="<h1>Thank you!</h1><p>Your order details...</p>" class="w-full font-mono text-xs bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white"></textarea>
+          </div>
+          <div id="tpl-preview-container" class="hidden bg-white rounded-lg p-3 min-h-[160px] max-h-[220px] overflow-y-auto border border-slate-700 text-slate-900 text-xs">
+            <div id="tpl-preview-render"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-800 shrink-0">
+        <button type="button" onclick="closeCreateTemplateModal()" class="px-3 py-1.5 rounded-lg text-xs text-slate-400 hover:text-white">Cancel</button>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="saveTemplate('draft')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700">Save Draft</button>
+          <button type="button" onclick="saveTemplate('pending_review')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-600/30 hover:bg-amber-600 text-amber-200 hover:text-white border border-amber-500/40">Submit for Review</button>
+          <button type="button" onclick="saveTemplate('approved_sync')" class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-purple-600 hover:bg-purple-500 text-white shadow">Save & Sync to DirectMail</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Recipients Modal (Manual + CSV) -->
+  <div id="add-recipients-modal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-darkbg-800 border border-pink-500/40 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="user-plus" class="w-4 h-4 text-pink-400"></i>
+          Add to Application Recipient Pool
+        </h3>
+        <button onclick="closeAddRecipientsModal()" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 mb-1">Add by Pasting (emails, comma or newline separated) <span class="text-rose-400">*</span></label>
+          <textarea id="app-recipients-paste" rows="5" placeholder="alice@example.com&#10;bob@example.com, Charlie &lt;charlie@example.com&gt;" class="w-full font-mono text-xs bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white"></textarea>
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1">Tags / Category Label (Optional)</label>
+          <input type="text" id="app-recipients-tags" placeholder="vip, newsletter, 2026-batch" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
+        <button type="button" onclick="closeAddRecipientsModal()" class="px-3 py-1.5 rounded-lg text-xs text-slate-400 hover:text-white">Cancel</button>
+        <button type="button" onclick="submitAddRecipients()" class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-pink-600 hover:bg-pink-500 text-white">Add Recipients</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bulk Safety Confirmation Modal (Preserved) -->
+  <div id="bulk-safety-modal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-darkbg-800 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center">
+          <i data-lucide="shield-alert" class="w-5 h-5 text-purple-400"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-white">Campaign Confirmation</h3>
+          <p class="text-xs text-slate-400">Please verify campaign parameters before dispatching</p>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/80 rounded-xl p-4 border border-slate-800 space-y-3 text-xs">
+        <div class="flex justify-between py-1 border-b border-slate-800">
+          <span class="text-slate-400">Recipients Count:</span>
+          <span id="confirm-recipient-count" class="font-bold text-purple-400 text-sm">0</span>
+        </div>
+        <div class="flex justify-between py-1 border-b border-slate-800">
+          <span class="text-slate-400">Selected Region:</span>
+          <span id="confirm-region" class="font-semibold text-white">Singapore</span>
+        </div>
+        <div class="flex justify-between py-1 border-b border-slate-800">
+          <span class="text-slate-400">Sender Address:</span>
+          <span id="confirm-sender" class="font-mono text-slate-200">sender@example.com</span>
+        </div>
+        <div class="flex justify-between py-1 border-b border-slate-800">
+          <span class="text-slate-400">Subject:</span>
+          <span id="confirm-subject" class="font-medium text-white truncate max-w-[240px]">Test Subject</span>
+        </div>
+        <div class="flex justify-between py-1">
+          <span class="text-slate-400">Execution Schedule:</span>
+          <span id="confirm-schedule" class="text-emerald-400 font-medium">Immediate Sending</span>
+        </div>
+      </div>
+
+      <p class="text-xs text-amber-400/90 bg-amber-500/10 p-3 rounded-lg border border-amber-500/20">
+        ⚠️ You are about to launch this campaign. All recipient addresses will be queued and sent subject to your configured rate limits.
+      </p>
+
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button type="button" onclick="closeBulkSafetyModal()" class="px-4 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white bg-slate-900 border border-slate-700">Cancel</button>
+        <button type="button" onclick="confirmAndDispatchBulk()" class="px-5 py-2 rounded-xl text-xs font-semibold text-white bg-purple-600 hover:bg-purple-500 shadow-lg shadow-purple-900/40">Confirm and Send Campaign</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Job Detail Drawer / Modal (Preserved) -->
+  <div id="job-detail-modal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-darkbg-800 border border-slate-700 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800 shrink-0">
+        <div class="flex items-center gap-2">
+          <i data-lucide="file-text" class="w-4 h-4 text-brand"></i>
+          <h3 class="text-sm font-bold text-white">Email Job Inspector</h3>
+          <span id="modal-job-id" class="text-[11px] font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded"></span>
+        </div>
+        <button onclick="closeJobDetailModal()" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div id="job-detail-content" class="overflow-y-auto space-y-4 text-xs pr-1">
+        <!-- Filled dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Reschedule Modal (Preserved) -->
+  <div id="reschedule-modal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-darkbg-800 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="calendar" class="w-4 h-4 text-blue-400"></i>
+          Reschedule Email Job
+        </h3>
+        <button onclick="closeRescheduleModal()" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="resched-job-id">
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">New Date</label>
+          <input type="date" id="resched-new-date" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">New Time</label>
+          <input type="time" id="resched-new-time" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Timezone</label>
+          <select id="resched-new-tz" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+            <option value="Asia/Kolkata">Asia/Kolkata</option>
+            <option value="UTC">UTC</option>
+            <option value="Asia/Singapore">Asia/Singapore</option>
+            <option value="Europe/Berlin">Europe/Berlin</option>
+            <option value="America/New_York">America/New_York</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
+        <button type="button" onclick="closeRescheduleModal()" class="px-3 py-1.5 rounded-lg text-xs text-slate-400 hover:text-white">Cancel</button>
+        <button type="button" onclick="confirmReschedule()" class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white">Save New Time</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Email Tag Modal -->
+  <div id="create-tag-modal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-darkbg-800 border border-amber-500/40 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="tag" class="w-4 h-4 text-amber-400"></i>
+          <span>Create Email Classification Tag</span>
+        </h3>
+        <button onclick="closeCreateTagModal()" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 mb-1">Tag Name <span class="text-rose-400">*</span></label>
+          <input type="text" id="new-tag-name" placeholder="e.g. receipts, invoices, onboarding" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500">
+          <p class="text-[11px] text-slate-500 mt-1">DirectMail tag name (alphanumeric, underscores, hyphens).</p>
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1">DirectMail Region</label>
+          <select id="new-tag-region" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+            <option value="singapore" selected>🇸🇬 Singapore (ap-southeast-1)</option>
+            <option value="germany">🇩🇪 Germany (eu-central-1)</option>
+            <option value="united_states">🇺🇸 United States (us-east-1)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1">Description (Optional)</label>
+          <textarea id="new-tag-desc" rows="3" placeholder="Brief note about the purpose of this email tag..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"></textarea>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
+        <button type="button" onclick="closeCreateTagModal()" class="px-3.5 py-1.5 rounded-lg text-xs text-slate-400 hover:text-white">Cancel</button>
+        <button type="button" onclick="submitCreateTag()" class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-amber-600 hover:bg-amber-500 text-white shadow">Create & Sync Tag</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Email Tag Modal -->
+  <div id="edit-tag-modal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-darkbg-800 border border-amber-500/40 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="edit" class="w-4 h-4 text-amber-400"></i>
+          <span>Edit Email Tag</span>
+        </h3>
+        <button onclick="closeEditTagModal()" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="edit-tag-id">
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">Tag Name</label>
+          <input type="text" id="edit-tag-name" readonly class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-400 font-mono">
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1">Description</label>
+          <textarea id="edit-tag-desc" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white"></textarea>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
+        <button type="button" onclick="closeEditTagModal()" class="px-3.5 py-1.5 rounded-lg text-xs text-slate-400 hover:text-white">Cancel</button>
+        <button type="button" onclick="submitUpdateTag()" class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-amber-600 hover:bg-amber-500 text-white shadow">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Delivery Drill-Down Modal -->
+  <div id="modal-delivery-drilldown" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-darkbg-800 border border-teal-500/40 rounded-2xl max-w-5xl w-full p-6 shadow-2xl space-y-4 max-h-[92vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800 shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center">
+            <i data-lucide="list-filter" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span>Delivery Recipient Drill-Down</span>
+              <span id="drilldown-status-badge" class="text-xs px-2 py-0.5 rounded font-mono font-medium capitalize bg-teal-500/20 text-teal-300 border border-teal-500/30">All Statuses</span>
+            </h3>
+            <p id="drilldown-subtitle" class="text-[11px] text-slate-400">Inspecting recipient delivery events, timestamps, opens, and error details</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="exportCurrentDrilldownCsv()" class="px-3 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow transition">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>Export CSV</span>
+          </button>
+          <button onclick="closeDeliveryDrillDown()" class="text-slate-400 hover:text-white p-1">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Search & Filters Toolbar inside Modal -->
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800 text-xs shrink-0">
+        <div class="flex flex-wrap items-center gap-2">
+          <input type="text" id="drilldown-search-input" onkeyup="debounceDrilldownSearch()" placeholder="Search recipient email, name..." class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 w-56 focus:outline-none focus:border-teal-500">
+          <select id="drilldown-status-filter" onchange="changeDrilldownStatus(this.value)" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-300">
+            <option value="">All Statuses</option>
+            <option value="successful">Successful / Delivered</option>
+            <option value="failed">Failed</option>
+            <option value="bounced">Bounced</option>
+            <option value="invalid">Invalid Addresses</option>
+            <option value="opened">Opened</option>
+            <option value="clicked">Clicked</option>
+          </select>
+        </div>
+        <div class="text-[11px] text-slate-400 font-mono" id="drilldown-count-summary">
+          Loading records...
+        </div>
+      </div>
+
+      <!-- Recipient Drilldown Table -->
+      <div class="overflow-y-auto flex-1 rounded-xl border border-slate-800">
+        <table class="w-full text-left text-xs">
+          <thead class="text-slate-400 border-b border-slate-800 uppercase tracking-wider text-[11px] bg-slate-900/80 sticky top-0 z-10">
+            <tr>
+              <th class="py-2.5 px-3">Recipient Email</th>
+              <th class="py-2.5 px-3">Campaign / Task</th>
+              <th class="py-2.5 px-3">Tag</th>
+              <th class="py-2.5 px-3">Status</th>
+              <th class="py-2.5 px-3">Send Time</th>
+              <th class="py-2.5 px-3">Delivery Time</th>
+              <th class="py-2.5 px-3">Opens</th>
+              <th class="py-2.5 px-3">Clicks</th>
+              <th class="py-2.5 px-3">Reason / Details</th>
+            </tr>
+          </thead>
+          <tbody id="drilldown-table-body" class="divide-y divide-slate-800 bg-slate-900/30">
+            <tr><td colspan="9" class="text-center py-8 text-slate-500 italic">Loading recipient delivery records...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer & Pagination -->
+      <div class="flex items-center justify-between pt-2 border-t border-slate-800 shrink-0 text-xs text-slate-400">
+        <span id="drilldown-page-info">Page 1</span>
+        <div class="flex items-center gap-2">
+          <button type="button" id="btn-drilldown-prev" onclick="prevDrilldownPage()" class="px-3 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 disabled:opacity-40">Previous</button>
+          <button type="button" id="btn-drilldown-next" onclick="nextDrilldownPage()" class="px-3 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 disabled:opacity-40">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Backend Connection Modal -->
+  <div id="backend-connect-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm hidden">
+    <div class="bg-darkbg-800 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 mx-4">
+      <div class="flex items-center justify-between border-b border-slate-700/80 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-brand/20 flex items-center justify-center text-brand">
+            <i data-lucide="cloud-lightning" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white">Live Backend Connection</h3>
+            <p class="text-[11px] text-slate-400">Connect this Netlify frontend to your live Alibaba agent backend</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeBackendModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-700/50">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Live Backend Endpoint URL</label>
+          <input type="text" id="input-backend-url" placeholder="https://f4ece397dec203a9-106-195-71-196.serveousercontent.com" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono text-xs focus:outline-none focus:border-brand">
+          <p class="text-[11px] text-slate-400 mt-1">Must be an HTTPS URL on Netlify (mixed-content security).</p>
+        </div>
+
+        <div class="flex flex-wrap gap-1.5 pt-1">
+          <span class="text-slate-400 text-[11px] self-center mr-1">Presets:</span>
+          <button type="button" onclick="setBackendUrlPreset('https://f4ece397dec203a9-106-195-71-196.serveousercontent.com')" class="px-2 py-0.5 rounded bg-slate-700/60 hover:bg-slate-700 text-[11px] text-slate-200 border border-slate-600">
+            Active Live Tunnel
+          </button>
+          <button type="button" onclick="setBackendUrlPreset('')" class="px-2 py-0.5 rounded bg-slate-700/60 hover:bg-slate-700 text-[11px] text-slate-200 border border-slate-600">
+            Relative / Same Host
+          </button>
+        </div>
+
+        <div id="backend-test-status" class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-xs hidden">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-3 border-t border-slate-700/80">
+        <button type="button" onclick="testBackendConnection()" id="btn-test-backend" class="px-3.5 py-1.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs font-medium flex items-center gap-1.5 transition">
+          <i data-lucide="activity" class="w-3.5 h-3.5"></i>
+          <span>Test Ping</span>
+        </button>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="closeBackendModal()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium">
+            Cancel
+          </button>
+          <button type="button" onclick="saveBackendUrl()" class="px-4 py-1.5 rounded-xl bg-brand hover:bg-brand-hover text-white text-xs font-semibold shadow transition">
+            Save & Connect
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Application Logic -->
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

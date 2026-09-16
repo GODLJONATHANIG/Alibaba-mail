@@ -1,0 +1,195 @@
+/* Custom CSS for Alibaba Cloud DirectMail Automation Agent */
+
+:root {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --color-brand: #ff6a00; /* Alibaba Orange */
+  --color-brand-dark: #e05d00;
+  --color-brand-light: #fff2e8;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #0f172a; /* Slate 900 */
+  color: #f8fafc;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Status Badges */
+.badge-sent {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.badge-scheduled {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+.badge-failed {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.badge-sending, .badge-retrying {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.badge-cancelled {
+  background-color: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+/* Region Badges */
+.region-singapore {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
+.region-germany {
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.1);
+  border: 1px solid rgba(167, 139, 250, 0.25);
+}
+.region-united_states {
+  color: #fb7185;
+  background: rgba(251, 113, 133, 0.1);
+  border: 1px solid rgba(251, 113, 133, 0.25);
+}
+
+/* Animations */
+@keyframes pulseSubtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+.animate-pulse-subtle {
+  animation: pulseSubtle 2s infinite ease-in-out;
+}
+
+/* Toasts */
+#toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.toast {
+  pointer-events: auto;
+  min-width: 320px;
+  max-width: 480px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
+}
+@keyframes toastIn {
+  from { transform: translateY(20px) scale(0.95); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* Modals */
+.modal-backdrop {
+  background-color: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+/* Code block / JSON preview */
+pre.code-json {
+  background-color: #090d16;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #38bdf8;
+  overflow-x: auto;
+}
+
+/* Markdown styling in Smart Agent and drawers */
+.prose-agent {
+  color: #cbd5e1;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.prose-agent h1, .prose-agent h2, .prose-agent h3, .prose-agent h4 {
+  color: #f8fafc;
+  font-weight: 700;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+.prose-agent h3 {
+  font-size: 1.1rem;
+}
+.prose-agent h4 {
+  font-size: 0.95rem;
+}
+.prose-agent p {
+  margin-bottom: 0.6rem;
+}
+.prose-agent ul, .prose-agent ol {
+  margin-left: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+.prose-agent ul {
+  list-style-type: disc;
+}
+.prose-agent ol {
+  list-style-type: decimal;
+}
+.prose-agent li {
+  margin-bottom: 0.25rem;
+}
+.prose-agent code {
+  background: #1e293b;
+  color: #fb923c;
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.25rem;
+  font-size: 0.8rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+.prose-agent strong {
+  color: #f1f5f9;
+}
+.prose-agent table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.75rem 0;
+  font-size: 0.8rem;
+}
+.prose-agent th, .prose-agent td {
+  border: 1px solid #334155;
+  padding: 0.4rem 0.6rem;
+}
+.prose-agent th {
+  background: #1e293b;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
