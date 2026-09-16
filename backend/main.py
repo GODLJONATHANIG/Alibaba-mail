@@ -4,6 +4,7 @@ Exposes REST endpoints and serves the frontend Single-Page Application.
 """
 import uuid
 import logging
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Optional, List, Dict, Any
@@ -102,11 +103,15 @@ async def lifespan(app: FastAPI):
     """Lifecycle events: init database and start background scheduler."""
     logger.info("Initializing database...")
     init_db()
-    logger.info("Starting DirectMail background scheduler...")
-    scheduler_instance.start()
+    if os.getenv("VERCEL") == "1":
+        logger.info("Running on Vercel; persistent background scheduler is disabled.")
+    else:
+        logger.info("Starting DirectMail background scheduler...")
+        scheduler_instance.start()
     yield
-    logger.info("Stopping DirectMail background scheduler...")
-    scheduler_instance.stop()
+    if os.getenv("VERCEL") != "1":
+        logger.info("Stopping DirectMail background scheduler...")
+        scheduler_instance.stop()
 
 app = FastAPI(
     title="Alibaba Cloud DirectMail Automation Agent",

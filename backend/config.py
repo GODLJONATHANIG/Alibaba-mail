@@ -107,7 +107,8 @@ def is_test_mode() -> bool:
     return val in ("1", "true", "yes", "on")
 
 DEFAULT_TIMEZONE = os.getenv("DEFAULT_TIMEZONE", "Asia/Kolkata")
-DB_FILE_PATH = os.getenv("DATABASE_PATH", str(BASE_DIR / "email_agent.db"))
+DEFAULT_DATABASE_PATH = "/tmp/email_agent.db" if os.getenv("VERCEL") == "1" else str(BASE_DIR / "email_agent.db")
+DB_FILE_PATH = os.getenv("DATABASE_PATH", DEFAULT_DATABASE_PATH)
 API_HOST = os.getenv("HOST", "0.0.0.0")
 API_PORT = int(os.getenv("PORT", "8000"))
 DEFAULT_RATE_LIMIT_QPS = float(os.getenv("RATE_LIMIT_QPS", "5.0"))
